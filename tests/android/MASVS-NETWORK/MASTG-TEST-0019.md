@@ -8,6 +8,10 @@ title: Testing Data Encryption on the Network
 masvs_v1_levels:
 - L1
 - L2
+profiles: [L1, L2]
+status: deprecated
+covered_by: [MASTG-TEST-0233, MASTG-TEST-0234, MASTG-TEST-0235, MASTG-TEST-0236, MASTG-TEST-0237, MASTG-TEST-0238, MASTG-TEST-0239]
+deprecation_note: New version available in MASTG V2
 ---
 
 ## Overview
@@ -29,7 +33,7 @@ Next, you should ensure that the app is not allowing cleartext HTTP traffic. Sin
 - Setting the [`android:usesCleartextTraffic`](https://developer.android.com/guide/topics/manifest/application-element#usesCleartextTraffic "Android documentation - usesCleartextTraffic flag") attribute of the `<application>` tag in the AndroidManifest.xml file. Note that this flag is ignored in case the Network Security Configuration is configured.
 - Configuring the Network Security Configuration to enable cleartext traffic by setting the `cleartextTrafficPermitted` attribute to true on `<domain-config>` elements.
 - Using low-level APIs (e.g. [`Socket`](https://developer.android.com/reference/java/net/Socket "Socket class")) to set up a custom HTTP connection.
-- Using a cross-platform framework (e.g. Flutter, Xamarin, ...), as these typically have their own implementations for HTTP libraries.
+- Using a cross-platform framework (e.g. Flutter), as these typically have their own implementations for HTTP libraries.
 
 All of the above cases must be carefully analyzed as a whole. For example, even if the app does not permit cleartext traffic in its Android Manifest or Network Security Configuration, it might actually still be sending HTTP traffic. That could be the case if it's using a low-level API (for which Network Security Configuration is ignored) or a badly configured cross-platform framework.
 
@@ -39,12 +43,12 @@ For more information refer to the article ["Security with HTTPS and SSL"](https:
 
 Intercept the tested app's incoming and outgoing network traffic and make sure that this traffic is encrypted. You can intercept network traffic in any of the following ways:
 
-- Capture all HTTP(S) and Websocket traffic with an interception proxy like [OWASP ZAP](../../../Document/0x08a-Testing-Tools.md#owasp-zap) or [Burp Suite](../../../Document/0x08a-Testing-Tools.md#burp-suite) and make sure all requests are made via HTTPS instead of HTTP.
-- Interception proxies like Burp and OWASP ZAP will show HTTP(S) traffic only. You can, however, use a Burp plugin such as [Burp-non-HTTP-Extension](https://github.com/summitt/Burp-Non-HTTP-Extension "Burp-non-HTTP-Extension") or the tool [mitm-relay](https://github.com/jrmdev/mitm_relay "mitm-relay") to decode and visualize communication via XMPP and other protocols.
+- Capture all HTTP(S) and Websocket traffic with an interception proxy like @MASTG-TOOL-0079 or @MASTG-TOOL-0077 and make sure all requests are made via HTTPS instead of HTTP.
+- Interception proxies like Burp and @MASTG-TOOL-0079 will show web related traffic primarily (e.g. HTTP(S), Web Sockets, gRPC, etc.). You can, however, use a Burp plugin such as [Burp-non-HTTP-Extension](https://github.com/summitt/Burp-Non-HTTP-Extension "Burp-non-HTTP-Extension") or the tool [mitm-relay](https://github.com/jrmdev/mitm_relay "mitm-relay") to decode and visualize communication via XMPP and other protocols.
 
-> Some applications may not work with proxies like Burp and OWASP ZAP because of Certificate Pinning. In such a scenario, please check ["Testing Custom Certificate Stores and Certificate Pinning"](../MASVS-NETWORK/MASTG-TEST-0022.md).
+> Some applications may not work with proxies like Burp and ZAP because of Certificate Pinning. In such a scenario, please check @MASTG-TEST-0022.
 
 For more details refer to:
 
-- ["Intercepting Traffic on the Network Layer"](../../../Document/0x04f-Testing-Network-Communication.md#intercepting-traffic-on-the-network-layer) from chapter "Mobile App Network Communication"
-- ["Setting up a Network Testing Environment"](../../../Document/0x05b-Android-Security-Testing.md#setting-up-a-network-testing-environment) from chapter "Android Basic Security Testing"
+- ["Intercepting Network Traffic Through MITM"](../../../Document/0x04f-Testing-Network-Communication.md#intercepting-network-traffic-through-mitm)
+- @MASTG-TECH-0010

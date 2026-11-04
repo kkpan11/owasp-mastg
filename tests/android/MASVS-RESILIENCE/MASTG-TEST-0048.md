@@ -7,11 +7,15 @@ platform: android
 title: Testing Reverse Engineering Tools Detection
 masvs_v1_levels:
 - R
+profiles: [R]
+status: deprecated
+covered_by: [MASTG-TEST-0341]
+deprecation_note: "New version available in MASTG V2"
 ---
 
 ## Effectiveness Assessment
 
-Launch the app with various reverse engineering tools and frameworks installed in your test device. Include at least the following: Frida, Xposed, Substrate for Android, RootCloak, Android SSL Trust Killer.
+Launch the app with various reverse engineering tools and frameworks installed in your test device. Include at least the following: @MASTG-TOOL-0031, @MASTG-TOOL-0027.
 
 The app should respond in some way to the presence of those tools. For example by:
 
@@ -32,5 +36,3 @@ The following steps should guide you when bypassing detection of reverse enginee
 1. Patch the anti reverse engineering functionality. Disable the unwanted behavior by simply overwriting the associated bytecode or native code with NOP instructions.
 2. Use Frida or Xposed to hook file system APIs on the Java and native layers. Return a handle to the original file, not the modified file.
 3. Use a kernel module to intercept file-related system calls. When the process attempts to open the modified file, return a file descriptor for the unmodified version of the file.
-
-Refer to the "[Tampering and Reverse Engineering on Android](../../../Document/0x05c-Reverse-Engineering-and-Tampering.md)" chapter for examples of patching, code injection, and kernel modules.

@@ -14,7 +14,7 @@ However, iOS apps run in a more restricted environment than their desktop counte
 
 To protect users from malicious applications, Apple restricts and controls access to the apps that are allowed to run on iOS devices. Apple's App Store is the only official application distribution platform. There developers can offer their apps and consumers can buy, download, and install apps. This distribution style differs from Android, which supports several app stores and sideloading (installing an app on your iOS device without using the official App Store). In iOS, sideloading typically refers to the app installation method via USB, although there are other enterprise iOS app distribution methods that do not use the App Store under the [Apple Developer Enterprise Program](https://developer.apple.com/programs/enterprise/ "Apple Developer Enterprise Program").
 
-In the past, sideloading was possible only with a jailbreak or complicated workarounds. With iOS 9 or higher, it is possible to [sideload via Xcode](https://www.igeeksblog.com/how-to-sideload-apps-on-iphone-ipad-in-ios-10/ "How to Sideload Apps on iPhone and iPad Running iOS 10 using Xcode 8").
+In the past, sideloading was possible only with a jailbreak or complicated workarounds. With iOS 9 or higher, it is possible to [sideload via Xcode](https://forums.developer.apple.com/forums/thread/91370).
 
 iOS apps are isolated from each other via Apple's iOS sandbox (historically called Seatbelt), a mandatory access control (MAC) mechanism describing the resources an app can and can't access. Compared to Android's extensive Binder IPC facilities, iOS offers very few IPC (Inter Process Communication) options, minimizing the potential attack surface.
 
@@ -37,7 +37,7 @@ The [iOS security architecture](https://www.apple.com/business/docs/iOS_Security
 
 ### Hardware Security
 
-The iOS security architecture makes good use of hardware-based security features that enhance overall performance. Each iOS device comes with two built-in Advanced Encryption Standard (AES) 256-bit keys. The device’s unique IDs (UIDs) and a device group IDs (GIDs) are AES 256-bit keys fused (UID) or compiled (GID) into the Application Processor (AP) and Secure Enclave Processor (SEP) during manufacturing. There's no direct way to read these keys with software or debugging interfaces such as JTAG. Encryption and decryption operations are performed by hardware AES crypto-engines that have exclusive access to these keys.
+The iOS security architecture makes good use of hardware-based security features that enhance overall performance. Each iOS device comes with two built-in Advanced Encryption Standard (AES) 256-bit keys. The device's unique IDs (UIDs) and a device group IDs (GIDs) are AES 256-bit keys fused (UID) or compiled (GID) into the Application Processor (AP) and Secure Enclave Processor (SEP) during manufacturing. There's no direct way to read these keys with software or debugging interfaces such as JTAG. Encryption and decryption operations are performed by hardware AES crypto-engines that have exclusive access to these keys.
 
 The GID is a value shared by all processors in a class of devices used to prevent tampering with firmware files and other cryptographic tasks not directly related to the user's private data. UIDs, which are unique to each device, are used to protect the key hierarchy that's used for device-level file system encryption. Because UIDs aren't recorded during manufacturing, not even Apple can restore the file encryption keys for a particular device.
 
@@ -61,7 +61,7 @@ Developers need to register with Apple, join the [Apple Developer Program](https
 According to the [Archived Apple Developer Documentation](https://developer.apple.com/library/archive/documentation/Security/Conceptual/CodeSigningGuide/AboutCS/AboutCS.html#//apple_ref/doc/uid/TP40005929-CH3-SW3) the code signature consists of three parts:
 
 - A seal. This is a collection of checksums or hashes of the various parts of the code, created by the code signing software. The seal can be used at verification time to detect alterations.
-- A digital signature. The code signing software encrypts the seal using the signer’s identity to create a digital signature. This guarantees the seal’s integrity.
+- A digital signature. The code signing software encrypts the seal using the signer's identity to create a digital signature. This guarantees the seal's integrity.
 - Code requirements. These are the rules governing verification of the code signature. Depending on the goals, some are inherent to the verifier, while others are specified by the signer and sealed with the rest of the code.
 
 Learn more:
@@ -69,6 +69,8 @@ Learn more:
 - [Code Signing Guide (Archived Apple Developer Documentation)](https://developer.apple.com/library/archive/documentation/Security/Conceptual/CodeSigningGuide/Introduction/Introduction.html)
 - [Code Signing (Apple Developer Documentation)](https://developer.apple.com/support/code-signing/)
 - [Demystifying iOS Code Signature](https://medium.com/csit-tech-blog/demystifying-ios-code-signature-309d52c2ff1d)
+
+For app- and library-specific signing requirements, see @MASTG-KNOW-0058.
 
 ### Encryption and Data Protection
 
@@ -143,7 +145,7 @@ A language.lproj folder exists for each language that the application supports. 
 
 <img src="Images/Chapters/0x06a/iOS_project_folder.png" width="400px" />
 
-On a jailbroken device, you can recover the IPA for an installed iOS app using different tools that allow decrypting the main app binary and reconstruct the IPA file. Similarly, on a jailbroken device you can install the IPA file with [IPA Installer](https://github.com/autopear/ipainstaller "IPA Installer"). During mobile security assessments, developers often give you the IPA directly. They can send you the actual file or provide access to the development-specific distribution platform they use, e.g. [TestFlight](https://developer.apple.com/testflight/ "TestFlight") or [Visual Studio App Center](https://appcenter.ms/ "Visual Studio App Center").
+On a jailbroken device, you can recover the IPA for an installed iOS app using different tools that allow decrypting the main app binary and reconstruct the IPA file. Similarly, on a jailbroken device you can install the IPA file with @MASTG-TOOL-0138. During mobile security assessments, developers often give you the IPA directly. They can send you the actual file or provide access to the development-specific distribution platform they use, e.g. [TestFlight](https://developer.apple.com/testflight/ "TestFlight") or [Visual Studio App Center](https://appcenter.ms/ "Visual Studio App Center").
 
 ### App Permissions
 
@@ -182,4 +184,4 @@ App Attest, available under the DeviceCheck framework, helps you verify instance
 
 The process involves generating and validating cryptographic keys, along with a set of verifications performed by your server, ensuring the authenticity of the request. It is important to note that while App Attest enhances security, it does not guarantee complete protection against all forms of fraudulent activities.
 
-For more detailed information, refer to the [WWDC 2021](https://developer.apple.com/videos/play/wwdc2021/10244 "WWDC 2021") session, along with the [App Attest documentation](https://developer.apple.com/documentation/devicecheck/establishing_your_app_s_integrity "App Attest documentation") and [App Attest implementation guide](https://developer.apple.com/documentation/devicecheck/validating_apps_that_connect_to_your_server "App Attest implementation guide").
+For more detailed information, refer to the [WWDC 2021](https://developer.apple.com/videos/play/wwdc2021/10244 "WWDC 2021") session, along with the ["DeviceCheck documentation"](https://developer.apple.com/documentation/devicecheck/) and ["Validating apps that connect to your server"](https://developer.apple.com/documentation/devicecheck/validating-apps-that-connect-to-your-server).

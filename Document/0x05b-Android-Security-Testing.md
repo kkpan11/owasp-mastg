@@ -8,18 +8,18 @@ You can set up a fully functioning test environment on almost any machine runnin
 
 ### Host Device
 
-At the very least, you'll need [Android Studio](0x08a-Testing-Tools.md#android-studio) (which comes with the [Android SDK](0x08a-Testing-Tools.md#android-sdk "Android SDK")) platform tools, an emulator, and an app to manage the various SDK versions and framework components. Android Studio also comes with an Android Virtual Device (AVD) Manager application for creating emulator images. Make sure that the newest [SDK tools](https://developer.android.com/studio/releases/sdk-tools) and [platform tools](https://developer.android.com/studio/releases/platform-tools) packages are installed on your system.
+At the very least, you'll need @MASTG-TOOL-0007 (which comes with the @MASTG-TOOL-0006) platform tools, an emulator, and an app to manage the various SDK versions and framework components. Android Studio also comes with an Android Virtual Device (AVD) Manager application for creating emulator images. Make sure that the newest [SDK tools](https://developer.android.com/studio/releases/sdk-tools) and [platform tools](https://developer.android.com/studio/releases/platform-tools) packages are installed on your system.
 
-In addition, you may want to complete your host setup by installing the [Android NDK](0x08a-Testing-Tools.md#android-ndk) if you're planning to work with apps containing native libraries.
+In addition, you may want to complete your host setup by installing the @MASTG-TOOL-0005 if you're planning to work with apps containing native libraries.
 
-Sometimes it can be useful to display or control devices from the computer. To achieve this, you can use [Scrcpy](0x08a-Testing-Tools.md#scrcpy).
+Sometimes it can be useful to display or control devices from the computer. To achieve this, you can use @MASTG-TOOL-0024.
 
 ### Testing Device
 
 For dynamic analysis, you'll need an Android device to run the target app on. In principle, you can test without a real Android device and use only the emulator. However, apps execute quite slowly on a emulator, and simulators may not give realistic results. Testing on a real device makes for a smoother process and a more realistic environment. On the other hand, emulators allow you to easily change SDK versions or create multiple devices. A full overview of the pros and cons of each approach is listed in the table below.
 
 | Property | Physical | Emulator/Simulator |
-|---|---|---|
+| --- | --- | --- |
 | Ability to restore | Softbricks are always possible, but new firmware can typically still be flashed. Hardbricks are very rare. | Emulators can crash or become corrupt, but a new one can be created or a snapshot can be restored. |
 | Reset | Can be restored to factory settings or reflashed. | Emulators can be deleted and recreated. |
 | Snapshots | Not possible. | Supported, great for malware analysis. |
@@ -30,7 +30,7 @@ For dynamic analysis, you'll need an Android device to run the target app on. In
 | Ease of root detection | Easier to hide root, as many root detection algorithms check for emulator properties. With Magisk Systemless root it's nearly impossible to detect. | Emulators will almost always trigger root detection algorithms due to the fact that they are built for testing with many artefacts that can be found. |
 | Hardware interaction | Easy interaction through Bluetooth, NFC, 4G, Wi-Fi, biometrics, camera, GPS, gyroscope, ... | Usually fairly limited, with emulated hardware input (e.g. random GPS coordinates) |
 | API level support | Depends on the device and the community. Active communities will keep distributing updated versions (e.g. LineageOS), while less popular devices may only receive a few updates. Switching between versions requires flashing the device, a tedious process. | Always supports the latest versions, including beta releases. Emulators containing specific API levels can easily be downloaded and launched. |
-| Native library support | Native libraries are usually built for ARM devices, so they will work on a physical device. | Some emulators run on x86 CPUs, so they may not be able to run packaged native libraries. |
+| Native library support | Native libraries are usually built for ARM devices, so they will work on a physical device. | Some emulators run on x86 CPUs, so they may not be able to run packaged native libraries (see [ARM Binary Translation on x86 Emulators](#arm-binary-translation-on-x86-emulators) below for available workarounds). |
 | Malware danger | Malware samples can infect a device, but if you can clear out the device storage and flash a clean firmware, thereby restoring it to factory settings, this should not be a problem. Be aware that there are malware samples that try to exploit the USB bridge. | Malware samples can infect an emulator, but the emulator can simply be removed and recreated. It is also possible to create snapshots and compare different snapshots to help in malware analysis. Be aware that there are malware proofs of concept which try to attack the hypervisor. |
 
 #### Testing on a Real Device
@@ -43,7 +43,7 @@ Alternatively, Google's [Android One](https://www.android.com/one/ "Android One"
 
 Devices that are supported by the [LineageOS](https://lineageos.org/ "LineageOS") project are also very good candidates for test devices. They have an active community, easy to follow flashing and rooting instructions and the latest Android versions are typically quickly available as a Lineage installation. LineageOS also continues support for new Android versions long after the OEM has stopped distributing updates.
 
-When working with an Android physical device, you'll want to enable Developer Mode and USB debugging on the device in order to use the [ADB](0x08a-Testing-Tools.md#adb) debugging interface. Since Android 4.2 (API level 16), the **Developer options** sub menu in the Settings app is hidden by default. To activate it, tap the **Build number** section of the **About phone** view seven times. Note that the build number field's location varies slightly by device. For example, on LG Phones, it is under **About phone** -> **Software information**. Once you have done this, **Developer options** will be shown at bottom of the Settings menu. Once developer options are activated, you can enable debugging with the **USB debugging** switch.
+When working with an Android physical device, you'll want to enable Developer Mode and USB debugging on the device in order to use the @MASTG-TOOL-0004 debugging interface. Since Android 4.2 (API level 16), the **Developer options** sub menu in the Settings app is hidden by default. To activate it, tap the **Build number** section of the **About phone** view seven times. Note that the build number field's location varies slightly by device. For example, on LG Phones, it is under **About phone** -> **Software information**. Once you have done this, **Developer options** will be shown at bottom of the Settings menu. Once developer options are activated, you can enable debugging with the **USB debugging** switch.
 
 #### Testing on an Emulator
 
@@ -71,10 +71,31 @@ You can either start an Android Virtual Device (AVD) by using the AVD Manager in
 
 Several tools and VMs that can be used to test an app within an emulator environment are available:
 
-- [MobSF](https://github.com/MobSF/Mobile-Security-Framework-MobSF "MobSF")
+- @MASTG-TOOL-0035
 - [Nathan](https://github.com/mseclab/nathan "Nathan") (not updated since 2016)
 
-Please also verify the ["Testing Tools"](0x08a-Testing-Tools.md) chapter at the end of this book.
+##### ARM Binary Translation on x86 Emulators
+
+!!! warning
+Running ARM code on x86 through binary translation can change app behavior or cause crashes. When contributing to the OWASP MASTG, state whether you used binary translation and identify the emulator, system image, and translation implementation. Translation can affect security testing results, so confirm relevant tests or demos on an ARM device when possible.
+Most Android devices use ARM-based processors, and many Android applications include native libraries compiled for ARM architectures (`armeabi-v7a` or `arm64-v8a`). When testing these applications on an x86 or x86_64 emulator, the emulator must provide a mechanism to execute ARM native code.
+
+**Official Android Emulator (AVD):** Starting with Android 11 (API level 30), Google APIs and Google Play system images include built-in ARM-to-x86 translation. The level of support depends on the system image: the x86 image supports both x86 and ARMv7 (`armeabi-v7a`) ABIs, while the x86_64 image additionally supports ARM64 (`arm64-v8a`). The Android OS and Android Runtime (ART) run natively on x86, while ARM binaries required by an application's process are translated to x86 within that process. This avoids the performance overhead of full-system ARM emulation. For more details, see [Google's announcement on running ARM apps on the Android Emulator](https://android-developers.googleblog.com/2020/03/run-arm-apps-on-android-emulator.html).
+
+**Custom VMs and the Native Bridge:** Custom x86-based environments such as Genymotion typically do not provide ARM translation out of the box. Android provides a Native Bridge mechanism that can be used to load binary translation implementations. The `ro.dalvik.vm.native.bridge` system property is used to configure the native bridge implementation.
+
+Common translation implementations encountered in Android x86 environments include:
+
+- `libhoudini`: A proprietary ARM-to-x86 translation implementation used by some Android x86 environments.
+- `libndk_translation`: An ARM-to-x86 translation implementation included in compatible Android Emulator system images.
+
+Community-maintained scripts and flashable archives can be used to add ARM translation support to some custom VMs. However, such packages are version-specific and may not work across different Android system images.
+
+When using ARM binary translation during security testing, consider the following limitations and security aspects:
+
+- **Dynamic instrumentation**: Tools such as @MASTG-TOOL-0031 can experience limitations or fail to hook native ARM functions running through a translation layer.
+- **Application compatibility**: Applications that depend on architecture-specific behavior or perform environment checks may behave differently or fail under translation. Therefore, successful execution through a translation layer does not guarantee the same behavior on a physical ARM device.
+- **Supply chain risks**: Community translation packages obtained from third-party repositories may require root privileges and modifications to system partitions or system libraries. Only install such packages from trusted sources and use them in isolated testing environments.
 
 #### Getting Privileged Access
 
@@ -102,7 +123,7 @@ Magisk ("Magic Mask") is one way to root your Android device. Its specialty lies
 
 You can get familiar with Magisk reading the official [documentation on GitHub](https://topjohnwu.github.io/Magisk/ "Magisk Documentation"). If you don't have Magisk installed, you can find installation instructions in [the documentation](https://topjohnwu.github.io/Magisk/ "Magisk Documentation"). If you use an official Android version and plan to upgrade it, Magisk provides a [tutorial on GitHub](https://topjohnwu.github.io/Magisk/ota.html "OTA Installation").
 
-Furthermore, developers can use the power of Magisk to create custom modules and [submit](https://github.com/Magisk-Modules-Repo/submission "Submission") them to the official [Magisk Modules repository](https://github.com/Magisk-Modules-Repo "Magisk-Modules-Repo"). Submitted modules can then be installed inside the Magisk Manager application. One of these installable modules is a systemless version of the famous [Xposed Framework](0x08a-Testing-Tools.md#xposed) (available for SDK versions up to 27).
+Furthermore, developers can use the power of Magisk to create custom modules and [submit](https://github.com/Magisk-Modules-Repo/submission "Submission") them to the official [Magisk Modules repository](https://github.com/Magisk-Modules-Repo "Magisk-Modules-Repo"). Submitted modules can then be installed inside the Magisk Manager application. One of these installable modules is a systemless version of @MASTG-TOOL-0027 (available for SDK versions up to 27).
 
 ##### Root Detection
 

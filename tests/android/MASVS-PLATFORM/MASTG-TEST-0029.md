@@ -8,6 +8,10 @@ title: Testing for Sensitive Functionality Exposure Through IPC
 masvs_v1_levels:
 - L1
 - L2
+profiles: [L1, L2]
+status: deprecated
+covered_by: [MASTG-TEST-0364, MASTG-TEST-0365, MASTG-TEST-0366]
+deprecation_note: New version available in MASTG V2
 ---
 
 ## Overview
@@ -33,8 +37,8 @@ Once you identify a list of IPC mechanisms, review the source code to see whethe
 
 In the following, we use two example apps and give examples of identifying vulnerable IPC components:
 
-- ["Sieve"](https://github.com/mwrlabs/drozer/releases/download/2.3.4/sieve.apk "Sieve: Vulnerable Password Manager")
-- ["Android Insecure Bank"](../../../Document/0x08b-Reference-Apps.md#insecurebankv2)
+- ["Sieve"](https://github.com/ReversecLabs/drozer/releases/download/2.3.4/sieve.apk "Sieve: Vulnerable Password Manager")
+- @MASTG-APP-0010
 
 ### Activities
 
@@ -162,11 +166,11 @@ smsManager.sendTextMessage(textPhoneno, null, textMessage, null, null);
 }
 ```
 
-BroadcastReceivers should use the `android:permission` attribute;  otherwise, other applications can invoke them. You can use `Context.sendBroadcast(intent, receiverPermission);` to specify permissions a receiver must have to [read the broadcast](https://developer.android.com/reference/android/content/Context#sendBroadcast%28android.content.Intent,%20java.lang.String%29 "SendBroadcast"). You can also set an explicit application package name that limits the components this Intent will resolve to. If left as the default value (null), all components in all applications will be considered. If non-null, the Intent can match only the components in the given application package.
+BroadcastReceivers should use the `android:permission` attribute; otherwise, other applications can invoke them. You can use `Context.sendBroadcast(intent, receiverPermission);` to specify permissions a receiver must have to [read the broadcast](https://developer.android.com/reference/android/content/Context#sendBroadcast%28android.content.Intent,%20java.lang.String%29 "SendBroadcast"). You can also set an explicit application package name that limits the components this Intent will resolve to. If left as the default value (null), all components in all applications will be considered. If non-null, the Intent can match only the components in the given application package.
 
 ## Dynamic Analysis
 
-You can enumerate IPC components with [MobSF](../../../Document/0x08a-Testing-Tools.md#mobsf "MobSF"). To list all exported IPC components, upload the APK file and the components collection will be displayed in the following screen:
+You can enumerate IPC components with @MASTG-TOOL-0035. To list all exported IPC components, upload the APK file and the components collection will be displayed in the following screen:
 
 <img src="Images/Chapters/0x05h/MobSF_Show_Components.png" width="100%" />
 
@@ -180,7 +184,7 @@ Provider{34a20d5 com.mwr.example.sieve/.FileBackupProvider}
 Provider{64f10ea com.mwr.example.sieve/.DBContentProvider}
 ```
 
-Once identified, you can use [jadx](../../../Document/0x08a-Testing-Tools.md#jadx "jadx") to reverse engineer the app and analyze the source code of the exported content providers to identify potential vulnerabilities.
+Once identified, you can use @MASTG-TOOL-0018 to reverse engineer the app and analyze the source code of the exported content providers to identify potential vulnerabilities.
 
 To identify the corresponding class of a content provider, use the following information:
 
@@ -261,7 +265,7 @@ You can identify an exported activity using one of the following properties:
 - It have an `intent-filter` sub declaration.
 - It have the attribute `android:exported` to `0xffffffff`.
 
-You can also use [jadx](../../../Document/0x08a-Testing-Tools.md#jadx "jadx") to identify exported activities in the file `AndroidManifest.xml` using the criteria described above:
+You can also use @MASTG-TOOL-0018 to identify exported activities in the file `AndroidManifest.xml` using the criteria described above:
 
 ```xml
 <?xml version="1.0" encoding="utf-8"?>
@@ -361,7 +365,7 @@ You can identify an exported broadcast receiver using one of the following prope
 - It has an `intent-filter` sub declaration.
 - It has the attribute `android:exported` set to `0xffffffff`.
 
-You can also use [jadx](../../../Document/0x08a-Testing-Tools.md#jadx "jadx") to identify exported broadcast receivers in the file `AndroidManifest.xml` using the criteria described above:
+You can also use @MASTG-TOOL-0018 to identify exported broadcast receivers in the file `AndroidManifest.xml` using the criteria described above:
 
 ```xml
 <?xml version="1.0" encoding="utf-8"?>
@@ -383,9 +387,9 @@ You can also use [jadx](../../../Document/0x08a-Testing-Tools.md#jadx "jadx") to
 </manifest>
 ```
 
-The above example from the vulnerable banking application [InsecureBankv2](../../../Document/0x08b-Reference-Apps.md#insecurebankv2 "Vulnerable applications for Android") shows that only the broadcast receiver named `com.android.insecurebankv2.MyBroadCastReceiver` is exported.
+The above example from the vulnerable banking application @MASTG-APP-0010 shows that only the broadcast receiver named `com.android.insecurebankv2.MyBroadCastReceiver` is exported.
 
-Now that you know that there is an exported broadcast receiver, you can dive deeper and reverse engineer the app using [jadx](../../../Document/0x08a-Testing-Tools.md#jadx "jadx"). This will allow you to analyze the source code searching for potential vulnerabilities that you could later try to exploit. The source code of the exported broadcast receiver is the following:
+Now that you know that there is an exported broadcast receiver, you can dive deeper and reverse engineer the app using @MASTG-TOOL-0018. This will allow you to analyze the source code searching for potential vulnerabilities that you could later try to exploit. The source code of the exported broadcast receiver is the following:
 
 ```java
 package com.android.insecurebankv2;

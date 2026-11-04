@@ -8,6 +8,10 @@ title: Testing UIActivity Sharing
 masvs_v1_levels:
 - L1
 - L2
+profiles: [L1, L2]
+status: deprecated
+covered_by: []
+deprecation_note: "This test has no MASTG v2 successor by design. Whether to share a given item through the Share Sheet is a user-consent decision, and the `excludedActivityTypes` property is not a security control because it cannot restrict the third-party share extensions that are the dominant sharing channel on modern iOS. See @MASTG-KNOW-0081 for background. The static and dynamic analysis techniques from this test have been preserved as @MASTG-TECH-0167 and @MASTG-TECH-0168."
 ---
 
 ## Overview
@@ -32,7 +36,7 @@ If having the source code, you should take a look at the `UIActivityViewControll
 - Check if it defines custom activities (also being passed to the previous method).
 - Verify the `excludedActivityTypes`, if any.
 
-If you only have the compiled/installed app, try searching for the previous method and property, for example:
+If you only have the compiled/installed app, try searching for the previous method and property, for example using @MASTG-TOOL-0129:
 
 ```bash
 $ rabin2 -zq Telegram\ X.app/Telegram\ X | grep -i activityItems
@@ -54,13 +58,14 @@ If not having the source code you can still take a look into the `Info.plist` fi
 
 A very complete explanation about the use of these keys can be found [on Stackoverflow](https://stackoverflow.com/questions/21937978/what-are-utimportedtypedeclarations-and-utexportedtypedeclarations-used-for-on-i "What are UTImportedTypeDeclarations and UTExportedTypeDeclarations used for on iOS?").
 
-Let's see a real-world example. We will take a File Manager app and take a look at these keys. We used [objection](https://github.com/sensepost/objection "objection") here to read the `Info.plist` file.
+Let's see a real-world example. We will take a File Manager app and take a look at these keys. We used @MASTG-TOOL-0038 here to read the `Info.plist` file.
 
 ```bash
-objection --gadget SomeFileManager run ios plist cat Info.plist
+objection --name SomeFileManager run ios plist cat Info.plist
 ```
 
-> Note that this is the same as if we would retrieve the IPA from the phone or accessed via e.g. SSH and navigated to the corresponding folder in the IPA / app sandbox. However, with objection we are just _one command away_ from our goal and this can be still considered static analysis.
+!!! note
+    This is the same as if we would retrieve the IPA from the phone or access it via e.g. SSH and navigate to the corresponding folder in the IPA / app sandbox. However, with objection, we are just _one command away_ from our goal, and this can still be considered static analysis.
 
 The first thing we noticed is that app does not declare any imported custom document types but we could find a couple of exported ones:
 
@@ -304,4 +309,4 @@ RET: 0x1
 
 If you look at the stack trace, you can see how `application:openURL:options:` called `__handleOpenURL:`, which called `moveItemAtPath:toPath:error:`. Notice that we have now this information without having the source code for the target app. The first thing that we had to do was clear: hook `application:openURL:options:`. Regarding the rest, we had to think a little bit and come up with methods that we could start tracing and are related to the file manager, for example, all methods containing the strings "copy", "move", "remove", etc. until we have found that the one being called was `moveItemAtPath:toPath:error:`.
 
-A final thing worth noticing here is that this way of handling incoming files is the same for custom URL schemes. Please refer to the "[Testing Custom URL Schemes](../MASVS-PLATFORM/MASTG-TEST-0075.md)" section for more information.
+A final thing worth noticing here is that this way of handling incoming files is the same for custom URL schemes. Please refer to @MASTG-TEST-0075 for more information.

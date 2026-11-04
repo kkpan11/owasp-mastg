@@ -8,6 +8,10 @@ title: Finding Sensitive Data in the Keyboard Cache
 masvs_v1_levels:
 - L1
 - L2
+profiles: [L1, L2]
+status: deprecated
+covered_by: [MASTG-TEST-0313, MASTG-TEST-0314]
+deprecation_note: New version available in MASTG V2
 ---
 
 ## Overview
@@ -36,7 +40,7 @@ If a jailbroken iPhone is available, execute the following steps:
 
 1. Reset your iOS device keyboard cache by navigating to `Settings > General > Reset > Reset Keyboard Dictionary`.
 2. Use the application and identify the functionalities that allow users to enter sensitive data.
-3. Dump the keyboard cache file with the extension `.dat` in the following directory and its subdirectories. (which might be different for iOS versions before 8.0):
+3. Retrieve the keyboard cache file with the extension `.dat` from the following directory and its subdirectories (which might be different for iOS versions before 8.0) by @MASTG-TECH-0052:
 `/private/var/mobile/Library/Keyboard/`
 4. Look for sensitive data, such as username, passwords, email addresses, and credit card numbers. If the sensitive data can be obtained via the keyboard cache file, the app fails this test.
 

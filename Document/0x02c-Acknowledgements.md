@@ -6,117 +6,117 @@ All of our contributors are listed in the Contributing section of the OWASP MAS 
 
 <https://mas.owasp.org/contributing/>
 
-## 🥇 MAS Advocates
+## MAS Advocates
 
-MAS Advocates are industry supporters of the OWASP MASVS and MASTG who have invested a significant and consistent amount of resources to push the project forward by providing consistent high-impact contributions and continuously spreading the word.
+Being a "MAS Advocate" is the highest status that companies can achieve in the OWASP MAS project, acknowledging that they've gone above and beyond, **continuously supporting the project with time/dedicated resources with clear/high impact**.
 
-> 🥇 Being a "MAS Advocate" is the highest status that companies can achieve in the project, acknowledging that they've gone above and beyond to support the project.
+To achieve this status, you'll need to demonstrate that you **make consistent high-impact contributions** to the project. The **minimum meaningful monthly contribution** is the following:
 
-**MAS Advocates continuously support the project with time/dedicated resources with clear/high impact**. To achieve this status, you'll need to demonstrate that you **make consistent high-impact contributions** to the project. For example:
+- **1 substantial PR**, which includes a full set of Weakness+Tests+Demos
+    - Alternatively, as this is currently a priority, several PRs focused on porting v1->v2 tests (equivalent effort to the above, must include at least one demo per test).
+- **2-3 in-depth PR reviews or issue support**
+    - Involving a thorough analysis, constructive feedback, and actionable suggestions that demonstrate a clear understanding of the topic.
+    - Reviews should go beyond surface-level comments and, where necessary, include research to provide well-informed insights.
+- **Active participation** in the MAS Task Force, which includes:
+    - Presenting your work, asking questions, and discussing new ideas/changes.
+    - Proactive follow-up on tasks and initiatives.
 
-- Content Pull Requests (e.g. adding/updating existing tests, tooling, maintaining code samples, etc.)
-- Technical PR reviews
-- Improving automation (GitHub Actions)
-- Upgrading, extending or creating new Crackmes
-- Moderating GitHub Discussions
-- Providing high quality feedback to the project and for special events such as the MASVS/MASTG refactoring.
-- etc.
+**Important Note**: Contributions should align with OWASP quality guidelines and project priorities.
 
-The following will be considered but it's not a requirement:
+**Initial evaluation period**: Consistency over a sustained period of time (min. 6 months) is fundamental. Note that the 6-month timeframe is a minimum. In our experience, applications may take anywhere from **6 months to 1 year or longer**, depending on the individual case, the level of effort, and the consistency and impact of the contributions.
 
-- **Showing Adoption**: it should be clear just from looking at the official company page that they have adopted the OWASP MASVS and MASTG. For example:
-    - Services/products
-    - Resources (e.g. blog posts, press releases, public pentest reports)
-    - Trainings
-    - etc.
-- **Spreading the word** and promoting the project with many presentations each year, public trainings, high social media involvement (e.g. liking, re-sharing, doing own posting specifically to promote the project).
-
-### 🎁 Benefits
+### Benefits
 
 - Company logo displayed in our main READMEs and main OWASP project site.
-- Linked blog posts in the MASTG will include the company name.
 - Special acknowledgement on each MASTG release containing the contributed PRs.
-- Re-shares from the OWASP MAS accounts on new publications (e.g. retweets).
-- Initial public "Thank You" and yearly after successful renewal.
 
-### 📝 How to Apply
+### How to Apply
 
-If you'd like to apply please contact the project leaders by sending an email to [Sven Schleier](mailto:sven.schleier@owasp.org) and [Carlos Holguera](mailto:carlos.holguera@owasp.org) who will validate your application and provide you with a _contribution report_. Please be sure to include sufficient evidence (e.g including links to PRs) showing what you've done in the 6 months period that goes inline with the three categories described above:
+If you'd like to apply please contact the project leaders by sending an email to [Sven Schleier](mailto:sven.schleier@owasp.org) and [Carlos Holguera](mailto:carlos.holguera@owasp.org) who will validate your application and provide you with a _contribution report_.
 
-- **Make consistent high-impact contributions**
-- **Showing Adoption**
-- **Spreading the word**
+As active participation in the **MAS Task Force** is part of the requirements, please note that Task Force participation is limited to **subject matter experts (SMEs)**. The individuals representing the applicant company must apply individually and provide information about themselves, their experience, and their work. **Each selected SME will also be required to submit an initial PR for evaluation**. An introductory meeting with the MAS team will then be arranged. Once approved, they will be able to join the MAS Task Force sessions.
 
-### ❗ Important Disclaimers
+After the initial evaluation period (see above), you'll need to send back the contribution report including sufficient evidence (e.g links to PRs) showing what you've done in that period that goes inline with **"the minimum meaningful monthly contributions"**.
 
-- If the "MAS Advocate" status is granted and you'd like to maintain it, the aforementioned contributions must remain consistent after the initial period as well. You should keep collecting this evidence and send us a _contribution report_ yearly.
-- [Financial donations](https://mas.owasp.org/donate/) are not part of the eligibility criteria but will be listed for completion.
-- Re-shared publications and blog posts linked in MASTG text must be **educational** and focus on mobile security or MASVS/MASTG and **not endorse company products/services**.
-- Advocate Companies may use the logo and links to MASVS/MASTG resources as part of their communication but cannot use them as an endorsement by OWASP as a preferred provider of software and services.
-    - Example of what's ok: list MAS Advocate status on website home page, in "about company" slides in sales presentations, on sales collateral.
-    - Example of what's not ok: a MAS Advocate cannot claim they are OWASP certified.
-- The quality of the application of the MASVS/MASTG by these companies [has not been vetted by the MAS team](https://mas.owasp.org/MASVS/Intro/04-Assessment_and_Certification/).
+### Important Disclaimers
 
-> The OWASP Foundation is very grateful for the support by the individuals and organizations listed. However please note, the OWASP Foundation is strictly vendor neutral and does not endorse any of its supporters. MAS Advocates do not influence the content of the MASVS or MASTG in any way.
+#### Renewals
+
+If the **MAS Advocate** status is granted and you wish to maintain it, contributions must remain consistent beyond the initial evaluation period. Advocates must continue collecting evidence and submit a **yearly contribution report**.
+
+#### Financial Donations
+
+Financial donations are **not** part of the eligibility criteria for MAS Advocate status.
+
+#### Non-Endorsement
+
+Advocate companies may use the OWASP MAS logo and reference MASVS/MASTG resources in their communications. However, they **cannot** present this as an **endorsement by OWASP** or imply that they are a **preferred provider** of software or services.
+
+#### Revocation of MAS Advocate Status
+
+MAS Advocate status will be **revoked immediately** if a company fails to comply with the guidelines. For example:
+
+- **Acceptable Use**: Listing MAS Advocate status on a website homepage, in "About Company" slides for sales presentations, or in sales collateral.
+- **Non-Compliant Use**: Claiming OWASP certification, OWASP endorsement, or being a **preferred vendor** of OWASP or the MAS project.
+
+#### Non-Certification & Non-Vetting Disclaimer
+
+OWASP **does not certify, validate, or vet** any vendors, software, or trust marks. Claims of MASVS/MASTG/MASWE compliance **are not officially recognized** by OWASP or the OWASP MAS project. Organizations should exercise caution when relying on such claims.
+
+#### Vendor Neutrality
+
+The **OWASP Foundation** is strictly vendor-neutral and **does not endorse** any of its supporters.
+
+#### Governance and Editorial Independence
+
+MAS Advocates may contribute to discussions, provide feedback, and suggest improvements to the OWASP MAS resources. However, they **do not have decision-making authority** over the final content, which remains under the control of the OWASP MAS project leaders.
 
 ## Our MAS Advocates
 
-<img src="Images/Other/nowsecure-logo.png" width="350px" />
+### NowSecure
 
-[NowSecure](https://www.nowsecure.com) has provided consistent high-impact contributions to the project and has successfully helped spread the word.
+<img src="Images/Other/nowsecure-logo.png" style="width: 50%; border-radius: 5px" />
 
-**We'd like to thank NowSecure for its exemplary contribution which sets a blueprint for other potential contributors wanting to push the project forward.**
+**We'd like to thank [NowSecure](https://www.nowsecure.com) for its exemplary contributions since 2022, which set a blueprint for other potential contributors wanting to push the project forward.** [Read more about their journey here.](https://mas.owasp.org/news/2025/04/09/3-years-advocate-nowsecure/)
 
-### NowSecure's Contributions to the MAS Project
+**High-impact Contributions:**
 
-**High-impact Contributions (time/dedicated resources):**
+- Hundreds of pull requests and reviews, significantly enhancing MAS resources.
+- Key role in rebranding the project from MSTG to OWASP MAS.
+- Major contributions to MASVS v2.0.0, including feedback on abstraction and testing profiles.
+- Contributions to the MASTG refactor, including modularizing the framework.
+- Significant input in introducing MASVS-PRIVACY and MASWE.
+- Leadership of the MAS Task Force, driving the roadmap forward.
+- Support in developing MAS Test Apps for Android and iOS.
 
-- [Content PRs](https://github.com/OWASP/owasp-mastg/pulls?q=is%3Apr+%22%28by+%40NowSecure%29%22)
-- Technical Reviews for PRs
-- Participation in GitHub Discussions
+A special mention goes to NowSecure's contributions during the **OWASP Project Summit 2024**, where they led the mobile app security track and reviewed numerous contributions, fostering collaboration and innovation.
 
-A special mention goes for the **contribution to the MASVS Refactoring**:
+In the past, NowSecure has also contributed to the project and has donated the @MASTG-APP-0015.
 
-- Significant time investment to drive the discussions and create the proposals along with the community
-- Testability Analysis
-- Feedback on each category proposal
-- Statistics from internal analysis
+### Guardsquare
 
-In the past, NowSecure has also contributed to the project, has sponsored it becoming a "God Mode Sponsor" and has donated the [UnCrackable App for Android Level 4: Radare2 Pay](0x08b-Reference-Apps.md#android-uncrackable-l4).
+<img src="Images/Other/guardsquare-logo.png" style="width: 50%; border-radius: 5px" />
 
-Additionally:
+**We'd like to thank [Guardsquare](https://www.guardsquare.com) for its outstanding contributions to the OWASP MAS project, culminating in achieving MAS Advocate status in 2025.** [Read more about their achievement here.](https://mas.owasp.org/news/2025/05/23/new-advocate-guardsquare/)
 
-**Showing Adoption:**
+**High-impact Contributions:**
 
-- Services / Products:
-    - [NowSecure Debuts New OWASP MASVS Mobile Pen Tests](https://www.nowsecure.com/blog/2022/03/22/nowsecure-debuts-new-owasp-masvs-mobile-pen-tests/)
-    - [NowSecure Platform for Automated Mobile Security Testing](https://www.nowsecure.com/products/nowsecure-platform/)
-- Resources:
-    - [The Essential Guide to the OWASP Mobile Security Project](https://discover.nowsecure.com/c/manager-guide-owasp?x=LIaYZt&xs=90367)
-- Trainings:
-    - [Standards and Risk Assessment](https://academy.nowsecure.com/standards-and-risk-assessment)
-    - [OWASP MASVS & MASTG Updates](https://academy.nowsecure.com/owasp-masvs-mstg-updates)
-    - [Intro to Mobile App Security](https://academy.nowsecure.com/intro-to-mobile-app-security)
+- Active participation in the MAS Task Force, including monthly calls and proactive follow-ups.
+- Numerous pull requests focused on porting v1 to v2 tests with demos.
+- Peer reviews and actionable feedback to maintain MASTG quality.
 
-**Spreading the Word:**
+A special highlight was Guardsquare's significant contributions during the **OWASP Project Summit in November 2024**, where their team submitted the majority of the \~40 pull requests created during the event.
 
-- **Social media involvement**: continuous Twitter and LinkedIn activity (see [examples](https://twitter.com/search?q=(MASVS%20OR%20MSTG)%20(from%3ANowSecureMobile)&src=typed_query))
-- **Case Study**: [NowSecure Commits to Security Standards](https://drive.google.com/file/d/1cns3Ot6MGdHwMMSx88lDds3brktMhLOM/view?usp=share_link)
-- **Blog Posts**:
-    - [Integrate security into the mobile app software development lifecycle](https://www.scmagazine.com/perspective/devops/integrate-security-into-the-mobile-app-software-development-lifecycle)
-    - [OWASP Mobile Security Testing Checklist Aids Compliance](https://www.nowsecure.com/blog/2022/02/23/owasp-mobile-security-testing-checklist-aids-compliance/)
-- **Presentations**:
-    - Refactoring Mobile App Security (OWASP AppSec US, Oct 2023)
-    - OWASP MAS Project Showcase (OWASP AppSec US, Oct 2023)
-    - OWASP MASVS v2 Updates (Tech Talks by NowSecure, Feb 2023)
-    - "Mobile Wanderlust"! Our journey to Version 2.0! (OWASP AppSec EU Jun 10 2022, OWASP Global AppSec APAC Sept 2022, OWASP AppSec US Nov 2022, OWASP AppSec EU Feb 2023)
-    - Insiders Guide to Mobile AppSec with Latest OWASP MASVS (OWASP Toronto Chapter Feb 10 2022)
-    - [Insiders Guide to Mobile AppSec with Latest OWASP MASVS (OWASP Virtual AppSec 2021 Nov 11 2021)](https://www.youtube.com/watch?v=TcYtpUIIMYw)
-    - [Insiders Guide to Mobile AppSec with OWASP MASVS (OWASP Northern Virginia Chapter Oct 8 2021)](https://www.youtube.com/watch?v=fuLo64WH3SU)
-    - and more
+### vulnit
 
-### Donators
+<img src="Images/Other/vulnit-logo.png" style="width: 50%; border-radius: 5px" />
 
-While both the MASVS and the MASTG are created and maintained by the community on a voluntary basis, sometimes a little bit of outside help is required. We therefore thank our donators for providing the funds to be able to hire technical editors. Note that their donation does not influence the content of the MASVS or MASTG in any way. The Donation Packages are described on our [OWASP Project page](https://mas.owasp.org/donate/ "OWASP MAS Donation Packages").
+**We'd like to thank [vulnit](https://www.vulnit.com) for its outstanding contributions to the OWASP MAS project, culminating in achieving MAS Advocate status in 2026.** [Read more about their achievement here.](https://mas.owasp.org/news/2026/07/15/new-advocate-vulnit/)
 
-<img src="Images/Donators/donators.png"/>
+**High-impact Contributions:**
+
+- Active participation in the MAS Task Force, including monthly calls and proactive follow-ups.
+- Numerous pull requests focused on porting v1 to v2 tests with demos.
+- Peer reviews and actionable feedback to maintain MASTG quality.
+
+A special highlight was vulnit's significant contributions during the **OWASP MASTG v2 port**, where their team tirelessly worked on porting tests and demos, ensuring a smooth transition to the new version right on time for the official announcement at the MAScon Vienna 2026 conference.

@@ -8,11 +8,15 @@ title: Testing Object Persistence
 masvs_v1_levels:
 - L1
 - L2
+profiles: [L1, L2]
+status: deprecated
+covered_by: [MASTG-TEST-0337]
+deprecation_note: New version available in MASTG V2
 ---
 
 ## Overview
 
-To test for [object persistence](../../../Document/0x05h-Testing-Platform-Interaction.md#object-persistence "Object Persistence") being used for storing sensitive information on the device, first identify all instances of object serialization and check if they carry any sensitive data. If yes, check if is properly protected against eavesdropping or unauthorized modification.
+To test for [object persistence](../../../Document/0x05h-Testing-Platform-Interaction.md#object-persistence "Object Persistence") being used for storing sensitive information on the device, first identify all instances of object serialization and check if they carry any sensitive data. If yes, check if it is properly protected against eavesdropping or unauthorized modification.
 
 There are a few generic remediation steps that you can always take:
 
@@ -24,8 +28,6 @@ For high-risk applications that focus on availability, we recommend that you use
 
 - the attacker could find the method's signature via the String-based argument
 - the attacker might be able to manipulate the reflection-based steps to execute business logic.
-
-See the chapter "[Android Anti-Reversing Defenses](../../../Document/0x05j-Testing-Resiliency-Against-Reverse-Engineering.md)" for more details.
 
 ## Static Analysis
 
@@ -113,4 +115,4 @@ Make sure that appropriate security measures are taken when sensitive informatio
 There are several ways to perform dynamic analysis:
 
 1. For the actual persistence: Use the techniques described in the data storage chapter.
-2. For reflection-based approaches: Use Xposed to hook into the deserialization methods or add unprocessable information to the serialized objects to see how they are handled (e.g., whether the application crashes or extra information can be extracted by enriching the objects).
+2. For reflection-based approaches: Use @MASTG-TOOL-0001 to hook into the deserialization methods or add unprocessable information to the serialized objects to see how they are handled (e.g., whether the application crashes or extra information can be extracted by enriching the objects).

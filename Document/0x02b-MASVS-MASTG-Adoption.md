@@ -28,7 +28,7 @@ In August 2022, CREST launched the OWASP Verification Standard (OVS) Programme. 
 - [CREST OVS Accreditation Process](https://www.crest-approved.org/membership/crest-ovs-programme/ovs-programme-accreditation-process/)
 - [CREST OVS Introductory Video](https://www.youtube.com/watch?v=th1l6-e4hcg)
 
-We thank CREST for their consulation regarding the OVS programme and its support to the open-source community to build and maintain global cyber security standards.
+We thank CREST for their consultation regarding the OVS programme and its support to the open-source community to build and maintain global cyber security standards.
 
 ## Standardization Institutions
 
@@ -49,7 +49,7 @@ The [National Institute of Standards and Technology (NIST)](https://www.nist.gov
 BSI stands for "Federal Office for Information Security", it has the goal to promote IT security in Germany and is the central IT security service provider for the federal government.
 
 - [Technical Guideline BSI TR-03161 Security requirements for eHealth applications v1.0, 2020](https://www.bsi.bund.de/SharedDocs/Downloads/EN/BSI/Publications/TechGuidelines/TR03161/TR-03161.pdf)
-- [Prüfvorschrift für den Produktgutachter des „ePA-Frontend des Versicherten“ und des „E-Rezept-Frontend des Versicherten v2.0, 2021](https://www.bsi.bund.de/SharedDocs/Downloads/DE/BSI/DigitaleGesellschaft/Pruefvorschrift_Produktgutachter_ePA-Frontend.pdf)
+- [Prüfvorschrift für den Produktgutachter des „ePA-Frontend des Versicherten" und des „E-Rezept-Frontend des Versicherten v2.0, 2021](https://www.bsi.bund.de/SharedDocs/Downloads/DE/BSI/DigitaleGesellschaft/Pruefvorschrift_Produktgutachter_ePA-Frontend.pdf)
 
 ### ioXt
 
@@ -59,19 +59,19 @@ The mission of the [ioXt Alliance](https://www.ioxtalliance.org/) is to build co
 
 In 2021, ioXt has [extended its security principles through the Mobile Application profile](https://www.ioxtalliance.org/news-events-blog/ioxt-alliance-expands-certification-program-for-mobile-and-vpn-security), so that app developers can ensure their products are built with, and maintain, high cybersecurity standards such as the OWASP MASVS and the VPN Trust Initiative. The ioXt Mobile Application profile is a security standard that applies to any cloud connected mobile app and provides the much needed market transparency for consumer and commercial mobile app security.
 
-- [ioXt Base Profile v2.0](https://static1.squarespace.com/static/5c6dbac1f8135a29c7fbb621/t/6078677c7d7b84799f1eaa5b/1618503553847/ioXt_Base_Profile.pdf)
+- [ioXt Base Profile v2.0](https://web.archive.org/web/20230828210402/https://static1.squarespace.com/static/5c6dbac1f8135a29c7fbb621/t/6078677c7d7b84799f1eaa5b/1618503553847/ioXt_Base_Profile.pdf)
 
 ## Governmental Institutions
 
 | Name | Document | Year |
 | -------------- | -------------------- | -- |
-| Government of Singapore, Cyber Security Agency (CSA) | [Safe App Standard](https://www.csa.gov.sg/docs/default-source/publications/2024/safe-app-standard-(v1-0)a4e34e8d-2679-44d1-a836-3904922d7b6a.pdf?sfvrsn=8732135_1) | 2024 |
+| Government of Singapore, Cyber Security Agency (CSA) | [Safe App Standard v2.0](https://www.csa.gov.sg/resources/publications/safe-app-standard-2-0) | 2024 |
 | European Payments Council | [Payment Threats and Fraud Trends Report](https://www.europeanpaymentscouncil.eu/sites/default/files/kb/file/2021-12/EPC193-21%20v1.0%202021%20Payments%20Threats%20and%20Fraud%20Trends%20Report.pdf) | 2021 |
 | European Payments Council | [Mobile Initiated SEPA Credit Transfer Interoperability Implementation Guidelines, including SCT Instant (MSCT IIGs)](https://www.europeanpaymentscouncil.eu/document-library/guidance-documents/mobile-initiated-sepa-instant-credit-transfer-interoperability) | 2019 |
 | ENISA (European Union Agency for Cybersecurity) | [Good Practices for Security of SMART CARS](https://www.enisa.europa.eu/publications/smart-cars) | 2019 |
 | Government of India, Ministry of Electronics & Information Technology | [Adoption of Mobile AppSec Verification Standard (MASVS) Version 1.0 of OWASP](http://egovstandards.gov.in/notified-standards-1) | 2019 |
 | Finish Transport and Communication Agency (TRAFICOM) | [Assessment guideline for electronic identification services (Draft)](https://www.traficom.fi/sites/default/files/media/file/DRAFT%20Traficom%20guideline%20211%202019%20conformity%20assessment%20of%20eID%20service.pdf) | 2019 |
-| Gobierno de España INCIBE | [Ciberseguridad en Smart Toys](https://www.incibe.es/sites/default/files/contenidos/guias/doc/guia_smarttoys_final.pdf) | 2019 |
+| Gobierno de España INCIBE | [Ciberseguridad en Smart Toys](https://web.archive.org/web/20250429140632/https://www.incibe.es/sites/default/files/contenidos/guias/doc/guia_smarttoys_final.pdf) | 2019 |
 
 ## Educational Institutions
 

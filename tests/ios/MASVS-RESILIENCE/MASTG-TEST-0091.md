@@ -7,11 +7,15 @@ platform: ios
 title: Testing Reverse Engineering Tools Detection
 masvs_v1_levels:
 - R
+profiles: [R]
+status: deprecated
+covered_by: [MASTG-TEST-0354]
+deprecation_note: "New version available in MASTG V2"
 ---
 
 ## Overview
 
-Launch the app with various reverse engineering tools and frameworks installed on your test device, such as Frida, Cydia Substrate, Cycript or SSL Kill Switch.
+Launch the app with various reverse engineering tools and frameworks installed on your test device, such as @MASTG-TOOL-0031, @MASTG-TOOL-0139, or @MASTG-TOOL-0066.
 
 The app should respond in some way to the presence of those tools. For example by:
 

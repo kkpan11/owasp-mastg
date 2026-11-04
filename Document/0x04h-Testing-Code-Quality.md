@@ -1,6 +1,6 @@
 ---
 masvs_category: MASVS-CODE
-platform: all
+platform: generic
 ---
 
 # Mobile App Code Quality
@@ -21,7 +21,7 @@ For example, while an app might query a local SQLite database, such databases us
 
 A _SQL injection_ attack involves integrating SQL commands into input data, mimicking the syntax of a predefined SQL command. A successful SQL injection attack allows the attacker to read or write to the database and possibly execute administrative commands, depending on the permissions granted by the server.
 
-Apps on both Android and iOS use SQLite databases as a means to control and organize local data storage. Assume an Android app handles local user authentication by storing the user credentials in a local database (a poor programming practice we’ll overlook for the sake of this example). Upon login, the app queries the database to search for a record with the username and password entered by the user:
+Apps on both Android and iOS use SQLite databases as a means to control and organize local data storage. Assume an Android app handles local user authentication by storing the user credentials in a local database (a poor programming practice we'll overlook for the sake of this example). Upon login, the app queries the database to search for a record with the username and password entered by the user:
 
 ```java
 SQLiteDatabase db;
@@ -50,7 +50,7 @@ Because the condition `'1' = '1'` always evaluates as true, this query return al
 
 Ostorlab exploited the sort parameter of [Yahoo's weather mobile application](https://blog.ostorlab.co/android-sql-contentProvider-sql-injections.html) with adb using this SQL injection payload.
 
-Another real-world instance of client-side SQL injection was discovered by Mark Woods within the "Qnotes" and "Qget" Android apps running on QNAP NAS storage appliances. These apps exported content providers vulnerable to SQL injection, allowing an attacker to retrieve the credentials for the NAS device. A detailed description of this issue can be found on the [Nettitude Blog](https://blog.nettitude.com/uk/qnap-android-dont-provide "Nettitude Blog - QNAP Android: Don\'t Over Provide").
+Another real-world instance of client-side SQL injection was discovered by Mark Woods within the "Qnotes" and "Qget" Android apps running on QNAP NAS storage appliances. These apps exported content providers vulnerable to SQL injection, allowing an attacker to retrieve the credentials for the NAS device. A detailed description of this issue can be found on the [Nettitude Blog](https://web.archive.org/web/20240808163023/https://blog.nettitude.com/uk/qnap-android-dont-provide "Nettitude Blog - QNAP Android: Don\'t Over Provide").
 
 ### XML Injection
 
@@ -60,7 +60,7 @@ A popular variant of this attack is [XML eXternal Entity (XXE)](https://owasp.or
 
 ```xml
 <?xml version="1.0" encoding="ISO-8859-1"?>
- <!DOCTYPE foo [  
+ <!DOCTYPE foo [
   <!ELEMENT foo ANY >
   <!ENTITY xxe SYSTEM "file:///dev/random" >]><foo>&xxe;</foo>
 ```
@@ -102,7 +102,7 @@ Cross-site scripting (XSS) issues allow attackers to inject client-side scripts 
 
 In the context of _native apps_, XSS risks are far less prevalent for the simple reason these kinds of applications do not rely on a web browser. However, apps using WebView components, such as `WKWebView` or the deprecated `UIWebView` on iOS and `WebView` on Android, are potentially vulnerable to such attacks.
 
-An older but well-known example is the [local XSS issue in the Skype app for iOS, first identified by Phil Purviance](https://superevr.com/blog/2011/xss-in-skype-for-ios "XSS in Skype for iOS"). The Skype app failed to properly encode the name of the message sender, allowing an attacker to inject malicious JavaScript to be executed when a user views the message. In his proof-of-concept, Phil showed how to exploit the issue and steal a user's address book.
+An older but well-known example is the [local XSS issue in the Skype app for iOS, first identified by Phil Purviance](https://superevr.com/blog/2011/xss-in-skype-for-ios "XSS in Skype for iOS"). The Skype app failed to properly encode the name of the message sender, allowing an attacker to inject malicious JavaScript to be executed when a user views the message. In this proof-of-concept, Phil showed how to exploit the issue and steal a user's address book.
 
 ### Static Analysis - Security Testing Considerations
 
@@ -145,7 +145,7 @@ Kotlin
     }
 ```
 
-Sergey Bobrov was able to take advantage of this in the following [HackerOne report](https://hackerone.com/reports/189793 "HackerOne report - [Android] XSS via start ContentActivity"). Any input to the HTML parameter would be trusted in Quora's ActionBarContentActivity. Payloads were successful using adb, clipboard data via ModalContentActivity, and Intents from 3rd party applications.
+Sergey Bobrov was able to take advantage of this in the following [HackerOne report](https://hackerone.com/reports/189793 "HackerOne report - [Android] XSS via start ContentActivity"). Any input to the HTML parameter would be trusted in Quora's ActionBarContentActivity. Payloads were successful using adb, clipboard data via ModalContentActivity, and Intents from third-party applications.
 
 - ADB
 
@@ -163,7 +163,7 @@ Sergey Bobrov was able to take advantage of this in the following [HackerOne rep
   '<script>alert(QuoraAndroid.getClipboardData());</script>'
   ```
 
-- 3rd party Intent in Java or Kotlin:
+- third-party Intent in Java or Kotlin:
 
   ```java
   Intent i = new Intent();
@@ -183,23 +183,23 @@ Sergey Bobrov was able to take advantage of this in the following [HackerOne rep
   view.context.startActivity(i)
   ```
 
-If a WebView is used to display a remote website, the burden of escaping HTML shifts to the server side. If an XSS flaw exists on the web server, this can be used to execute script in the context of the WebView. As such, it is important to perform static analysis of the web application source code.
+If a WebView is used to display a remote website, the burden of escaping HTML shifts to the server side. If an XSS flaw exists on the web server, this can be used to execute a script in the context of the WebView. As such, it is important to perform static analysis of the web application source code.
 
 Verify that the following best practices have been followed:
 
 - No untrusted data is rendered in HTML, JavaScript or other interpreted contexts unless it is absolutely necessary.
-- Appropriate encoding is applied to escape characters, such as HTML entity encoding. Note: escaping rules become complicated when HTML is nested within other code, for example, rendering a URL located inside a JavaScript block.
+- Appropriate encoding is applied to escape characters, such as HTML entity encoding. Note: escaping rules becomes complicated when HTML is nested within other code, for example, rendering a URL located inside a JavaScript block.
 
-Consider how data will be rendered in a response. For example, if data is rendered in a HTML context, six control characters that must be escaped:
+Consider how data will be rendered in a response. For example, if data is rendered in an HTML context, six control characters that must be escaped:
 
-| Character  | Escaped      |
-| :-------------: |:-------------:|
-| & | &amp;amp;|
+| Character | Escaped |
+| --- | --- |
+| & | &amp;amp; |
 | < | &amp;lt; |
-| > | &amp;gt;|
-| " | &amp;quot;|
-| ' | &amp;#x27;|
-| / | &amp;#x2F;|
+| > | &amp;gt; |
+| " | &amp;quot; |
+| ' | &amp;#x27; |
+| / | &amp;#x2F; |
 
 For a comprehensive list of escaping rules and other prevention measures, refer to the [OWASP XSS Prevention Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/Cross_Site_Scripting_Prevention_Cheat_Sheet.html "OWASP XSS Prevention Cheat Sheet").
 
@@ -223,7 +223,7 @@ Memory corruption bugs are a popular mainstay with hackers. This class of bug re
 
 - **Integer overflows**: When the result of an arithmetic operation exceeds the maximum value for the integer type defined by the programmer, this results in the value "wrapping around" the maximum integer value, inevitably resulting in a small value being stored. Conversely, when the result of an arithmetic operation is smaller than the minimum value of the integer type, an _integer underflow_ occurs where the result is larger than expected. Whether a particular integer overflow/underflow bug is exploitable depends on how the integer is used. For example, if the integer type were to represent the length of a buffer, this could create a buffer overflow vulnerability.
 
-- **Format string vulnerabilities**: When unchecked user input is passed to the format string parameter of the `printf` family of C functions, attackers may inject format tokens such as ‘%c’ and ‘%n’ to access memory. Format string bugs are convenient to exploit due to their flexibility. Should a program output the result of the string formatting operation, the attacker can read and write to memory arbitrarily, thus bypassing protection features such as ASLR.
+- **Format string vulnerabilities**: When unchecked user input is passed to the format string parameter of the `printf` family of C functions, attackers may inject format tokens such as '%c' and '%n' to access memory. Format string bugs are convenient to exploit due to their flexibility. Should a program output the result of the string formatting operation, the attacker can read and write to memory arbitrarily, thus bypassing protection features such as ASLR.
 
 The primary goal in exploiting memory corruption is usually to redirect program flow into a location where the attacker has placed assembled machine instructions referred to as _shellcode_. On iOS, the data execution prevention feature (as the name implies) prevents execution from memory defined as data segments. To bypass this protection, attackers leverage return-oriented programming (ROP). This process involves chaining together small, pre-existing code chunks ("gadgets") in the text segment where these gadgets may execute a function useful to the attacker or, call `mprotect` to change memory protection settings for the location where the attacker stored the _shellcode_.
 
@@ -236,10 +236,10 @@ Similarly, iOS apps can wrap C/C++ calls in Obj-C or Swift, making them suscepti
 The following code snippet shows a simple example for a condition resulting in a buffer overflow vulnerability.
 
 ```c
- void copyData(char *userId) {  
-    char  smallBuffer[10]; // size of 10  
+ void copyData(char *userId) {
+    char  smallBuffer[10]; // size of 10
     strcpy(smallBuffer, userId);
- }  
+ }
 ```
 
 To identify potential buffer overflows, look for uses of unsafe string functions (`strcpy`, `strcat`, other functions beginning with the "str" prefix, etc.) and potentially vulnerable programming constructs, such as copying user input into a limited-size buffer. The following should be considered red flags for unsafe string functions:
@@ -291,11 +291,11 @@ PIE (Position Independent Executable) are executable binaries made entirely from
 
 [ARC (Automatic Reference Counting)](https://en.wikipedia.org/wiki/Automatic_Reference_Counting) is a memory management feature of the Clang compiler exclusive to [Objective-C](https://developer.apple.com/library/content/releasenotes/ObjectiveC/RN-TransitioningToARC/Introduction/Introduction.html) and [Swift](https://docs.swift.org/swift-book/LanguageGuide/AutomaticReferenceCounting.html). ARC automatically frees up the memory used by class instances when those instances are no longer needed. ARC differs from tracing garbage collection in that there is no background process that deallocates the objects asynchronously at runtime.
 
-Unlike tracing garbage collection, ARC does not handle reference cycles automatically. This means that as long as there are "strong" references to an object, it will not be deallocated. Strong cross-references can accordingly create deadlocks and memory leaks. It is up to the developer to break cycles by using weak references. You can learn more about how it differs from Garbage Collection [here](https://fragmentedpodcast.com/episodes/064/).
+Unlike tracing garbage collection, ARC does not handle reference cycles automatically. This means that as long as there are "strong" references to an object, it will not be deallocated. Strong cross-references can accordingly create deadlocks and memory leaks. It is up to the developer to break cycles by using weak references. You can learn more about how it differs from Garbage Collection [in this Fragmented Podcast episode](https://fragmentedpodcast.com/episodes/064/).
 
 #### Garbage Collection
 
-[Garbage Collection (GC)](https://en.wikipedia.org/wiki/Garbage_collection_(computer_science)) is an automatic memory management feature of some languages such as Java/Kotlin/Dart. The garbage collector attempts to reclaim memory which was allocated by the program, but is no longer referenced—also called garbage. The Android runtime (ART) makes use of an [improved version of GC](https://source.android.com/devices/tech/dalvik#Improved_GC). You can learn more about how it differs from ARC [here](https://fragmentedpodcast.com/episodes/064/).
+[Garbage Collection (GC)](https://en.wikipedia.org/wiki/Garbage_collection_(computer_science)) is an automatic memory management feature of some languages such as Java/Kotlin/Dart. The garbage collector attempts to reclaim memory which was allocated by the program, but is no longer referenced—also called garbage. The Android runtime (ART) makes use of an [improved version of GC](https://source.android.com/devices/tech/dalvik#Improved_GC). You can learn more about how it differs from ARC [in this Fragmented Podcast episode](https://fragmentedpodcast.com/episodes/064/).
 
 #### Manual Memory Management
 

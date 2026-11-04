@@ -1,6 +1,6 @@
 ---
 masvs_category: MASVS-AUTH
-platform: all
+platform: generic
 ---
 
 # Mobile App Authentication Architectures
@@ -146,15 +146,15 @@ Note that the secret is shared between the authentication server and the backend
 
 **Best Practices:**
 
-Verify that the implementation adheres to JWT [best practices](https://stormpath.com/blog/jwt-the-right-way "JWT the right way"):
+Verify that the implementation adheres to JWT [best practices](https://cheatsheetseries.owasp.org/cheatsheets/JSON_Web_Token_Cheat_Sheet.html):
 
 - Verify that the HMAC is checked for all incoming requests containing a token.
 - Verify that the private signing key or HMAC secret key is never shared with the client. It should be available for the issuer and verifier only.
-- Verify that no sensitive data, such as personal identifiable information, is embedded in the JWT. For example, by decoding the base64-encoded JWT and find out what kind of data it transmits and whether that data is encrypted. If, for some reason, the architecture requires transmission of such information in the token, make sure that payload encryption is being applied. See the sample Java implementation on the [OWASP JWT Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/JSON_Web_Token_for_Java_Cheat_Sheet.html "JSON Web Token for Java Cheat Sheet").
+- Verify that no sensitive data, such as personal identifiable information, is embedded in the JWT. For example, by decoding the base64-encoded JWT and find out what kind of data it transmits and whether that data is encrypted. If, for some reason, the architecture requires transmission of such information in the token, make sure that payload encryption is being applied.
 - Make sure that replay attacks are addressed with the `jti` (JWT ID) claim, which gives the JWT a unique identifier.
 - Make sure that cross service relay attacks are addressed with the `aud` (audience) claim, which defines for which application the token is entitled.
 - Verify that tokens are stored securely on the mobile phone, with, for example, KeyChain (iOS) or KeyStore (Android).
-- Verify that the hashing algorithm is enforced. A common attack includes altering the token to use an empty signature (e.g., signature = "") and set the signing algorithm to `none`, indicating that "the integrity of the token has already been verified". [Some libraries](https://stormpath.com/blog/jwt-the-right-way) might treat tokens signed with the `none` algorithm as if they were valid tokens with verified signatures, so the application will trust altered token claims.
+- Verify that the hashing algorithm is enforced. A common attack includes altering the token to use an empty signature (e.g., signature = "") and set the signing algorithm to `none`, indicating that "the integrity of the token has already been verified". Some libraries might treat tokens signed with the `none` algorithm as if they were valid tokens with verified signatures, so the application will trust altered token claims.
 - Verify that tokens include an ["exp" expiration claim](https://tools.ietf.org/html/rfc7519#section-4.1.4 "RFC 7519") and the backend doesn't process expired tokens. A common method of granting tokens combines [access tokens and refresh tokens](https://auth0.com/blog/refresh-tokens-what-are-they-and-when-to-use-them/ "Refresh tokens & access tokens"). When the user logs in, the backend service issues a short-lived _access token_ and a long-lived _refresh token_. The application can then use the refresh token to obtain a new access token, if the access token expires.
 
 There are two different Burp Plugins that can help you for testing the vulnerabilities listed above:
@@ -162,7 +162,7 @@ There are two different Burp Plugins that can help you for testing the vulnerabi
 - [JSON Web Token Attacker](https://portswigger.net/bappstore/82d6c60490b540369d6d5d01822bdf61 "JSON Web Token Attacker")
 - [JSON Web Tokens](https://portswigger.net/bappstore/f923cbf91698420890354c1d8958fee6 "JSON Web Tokens")
 
-Also, make sure to check out the [OWASP JWT Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/JSON_Web_Token_for_Java_Cheat_Sheet.html "JSON Web Token (JWT) Cheat Sheet for Java") for additional information.
+Also, make sure to check out the [OWASP JWT Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/JSON_Web_Token_Cheat_Sheet.html "JSON Web Token (JWT) Cheat Sheet for Java") for additional information.
 
 ## OAuth 2.0
 
@@ -221,7 +221,7 @@ Some of the best practices include but are not limited to:
 
 - **User agent:**
     - The user should have a way to visually verify trust (e.g., Transport Layer Security (TLS) confirmation, website mechanisms).
-    - To prevent man-in-the-middle attacks, the client should validate the server's fully qualified domain name with the public key the server presented when the connection was established.
+    - To prevent [Machine-in-the-Middle (MITM)](0x04f-Testing-Network-Communication.md#intercepting-network-traffic-through-mitm) attacks, the client should validate the server's fully qualified domain name with the public key the server presented when the connection was established.
 - **Type of grant:**
     - On native apps, code grant should be used instead of implicit grant.
     - When using code grant, PKCE (Proof Key for Code Exchange) should be implemented to protect the code grant. Make sure that the server also implements it.
@@ -236,6 +236,14 @@ Some of the best practices include but are not limited to:
     - Reduce the scope and duration of access tokens when end-to-end confidentiality can't be guaranteed or the token provides access to sensitive information or transactions.
     - Remember that an attacker who has stolen tokens can access their scope and all resources associated with them if the app uses access tokens as bearer tokens with no other way to identify the client.
     - Store refresh tokens in secure local storage; they are long-term credentials.
+
+When implementing OAuth2 in **native apps** that need to interact with social media accounts, the use of embedded user agents such as WebView or WKWebView must always be avoided, because the host app has full control over the embedded view and can record user inputs such as usernames and passwords.
+
+Instead, a safer implementation is the use of _external user agents_, such as the system browser or in-app browser tabs, because they run in a separate instance and prevent the host app from capturing the user's credentials.
+
+Even though RFC 8252 permits the use of private-use URI schemes, they should be avoided where possible because another app can register the same custom scheme and intercept the authorization code.
+
+Instead, claimed "https" scheme URIs, such as Android App Links or iOS Universal Links, should be used where possible, as they allow the operating system to associate the redirect URI with the legitimate app.
 
 ## User Logout
 
@@ -258,7 +266,7 @@ The OWASP Web Testing Guide ([WSTG-SESS-06](https://owasp.org/www-project-web-se
 
 ## Supplementary Authentication
 
-Authentication schemes are sometimes supplemented by [passive contextual authentication](https://pdfs.semanticscholar.org/13aa/7bf53070ac8e209a84f6389bab58a1e2c888.pdf "Best Practices for
+Authentication schemes are sometimes supplemented by [passive contextual authentication](https://web.archive.org/web/20190219011248/https://pdfs.semanticscholar.org/13aa/7bf53070ac8e209a84f6389bab58a1e2c888.pdf "Best Practices for
 Multi-factor Authentication"), which can incorporate:
 
 - Geolocation
@@ -304,7 +312,7 @@ Threats:
 You can find below several suggestions to reduce the likelihood of exploitation when using SMS for OTP:
 
 - **Messaging**: When sending an OTP via SMS, be sure to include a message that lets the user know 1) what to do if they did not request the code 2) your company will never call or text them requesting that they relay their password or code.
-- **Dedicated Channel**: When using the OS push notification feature (APN on iOS and FCM on Android), OTPs can be sent securely to a registered application. This information is, compared to SMS, not accessible by other applications. Alternatively of a OTP the push notification could trigger a pop-up to approve the requested access.  
+- **Dedicated Channel**: When using the OS push notification feature (APN on iOS and FCM on Android), OTPs can be sent securely to a registered application. This information is, compared to SMS, not accessible by other applications. Alternatively of a OTP the push notification could trigger a pop-up to approve the requested access.
 - **Entropy**: Use authenticators with high entropy to make OTPs harder to crack or guess and use at least 6 digits. Make sure that digits are separates in smaller groups in case people have to remember them to copy them to your app.
 - **Avoid Voicemail**: If a user prefers to receive a phone call, do not leave the OTP information as a voicemail.
 

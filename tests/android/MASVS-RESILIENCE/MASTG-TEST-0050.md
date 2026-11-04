@@ -7,6 +7,10 @@ platform: android
 title: Testing Runtime Integrity Checks
 masvs_v1_levels:
 - R
+profiles: [R]
+status: deprecated
+covered_by: [MASTG-TEST-0341]
+deprecation_note: "New version available in MASTG V2"
 ---
 
 ## Effectiveness Assessment
@@ -17,5 +21,3 @@ Work on bypassing the checks with the following techniques:
 
 1. Patch the integrity checks. Disable the unwanted behavior by overwriting the respective bytecode or native code with NOP instructions.
 2. Use Frida or Xposed to hook the APIs used for detection and return fake values.
-
-Refer to the "[Tampering and Reverse Engineering on Android](../../../Document/0x05c-Reverse-Engineering-and-Tampering.md)" chapter for examples of patching, code injection, and kernel modules.

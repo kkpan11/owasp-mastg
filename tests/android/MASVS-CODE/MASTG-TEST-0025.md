@@ -8,15 +8,19 @@ title: Testing for Injection Flaws
 masvs_v1_levels:
 - L1
 - L2
+profiles: [L1, L2]
+status: deprecated
+covered_by: [MASTG-TEST-0339]
+deprecation_note: New version available in MASTG V2
 ---
 
 ## Overview
 
 To test for [injection flaws](../../../Document/0x04h-Testing-Code-Quality.md#injection-flaws "Injection Flaws") you need to first rely on other tests and check for functionality that might have been exposed:
 
-- ["Testing Deep Links"](../MASVS-PLATFORM/MASTG-TEST-0028.md)
-- ["Testing for Sensitive Functionality Exposure Through IPC"](../MASVS-PLATFORM/MASTG-TEST-0029.md)
-- ["Testing for Overlay Attacks"](../MASVS-PLATFORM/MASTG-TEST-0035.md)
+- @MASTG-TEST-0028
+- @MASTG-TEST-0029
+- @MASTG-TEST-0035
 
 ## Static Analysis
 
@@ -75,7 +79,7 @@ While the user is providing a STUDENT_ID at `content://sg.vp.owasp_mobile.provid
 All app functions that process data coming in through the UI should implement input validation:
 
 - For user interface input, [Android Saripaar v2](https://github.com/ragunathjawahar/android-saripaar "Android Saripaar v2") can be used.
-- For input from IPC or URL schemes, a validation function should be created. For example, the following determines whether the [string is alphanumeric](https://stackoverflow.com/questions/11241690/regex-for-checking-if-a-string-is-strictly-alphanumeric "Input Validation"):
+- For input from IPC or URL schemes, a validation function should be created. For example, the following determines whether the string is alphanumeric:
 
 ```java
 public boolean isAlphaNumeric(String s){

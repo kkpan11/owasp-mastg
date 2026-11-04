@@ -7,7 +7,7 @@ Following the example from "Disassembling Native Code" we will use different dis
 
 ## radare2
 
-Once you've opened your file in radare2 you should first get the address of the function you're looking for. You can do this by listing or getting information `i` about the symbols `s` (`is`) and grepping (`~` radare2's built-in grep) for some keyword, in our case we're looking for JNI related symbols so we enter "Java":
+Once you've opened your file in radare2 you should first get the address of the function you're looking for. You can do this by listing or getting information `i` about the symbols `s` (`is`) and grepping (`~` radare2's built-in grep) for some keyword, in our case, we're looking for JNI-related symbols, so we enter "Java":
 
 ```bash
 $ r2 -A HelloWord-JNI/lib/armeabi-v7a/libnative-lib.so
@@ -16,7 +16,7 @@ $ r2 -A HelloWord-JNI/lib/armeabi-v7a/libnative-lib.so
 003 0x00000e78 0x00000e78 GLOBAL   FUNC   16 Java_sg_vantagepoint_helloworldjni_MainActivity_stringFromJNI
 ```
 
-The method can be found at address `0x00000e78`. To display its disassembly simply run the following commands:
+The method can be found at address `0x00000e78`. To display its disassembly, simply run the following commands:
 
 ```bash
 [0x00000e3c]> e emu.str=true;
@@ -42,7 +42,7 @@ Let's explain the previous commands:
 - `s 0x00000e78` is a _seek_ to the address `s 0x00000e78`, where our target function is located. We do this so that the following commands apply to this address.
 - `pdf` means _print disassembly of function_.
 
-Using radare2 you can quickly run commands and exit by using the flags `-qc '<commands>'`. From the previous steps we know already what to do so we will simply put everything together:
+Using radare2 you can quickly run commands and exit by using the flags `-qc '<commands>'`. From the previous steps, we know already what to do, so we will simply put everything together:
 
 ```bash
 $ r2 -qc 'e emu.str=true; s 0x00000e78; af; pdf' HelloWord-JNI/lib/armeabi-v7a/libnative-lib.so
@@ -57,7 +57,7 @@ $ r2 -qc 'e emu.str=true; s 0x00000e78; af; pdf' HelloWord-JNI/lib/armeabi-v7a/l
 ╰           0x00000e82      1047           bx r2
 ```
 
-Notice that in this case we're not starting with the `-A` flag not running `aaa`. Instead, we just tell radare2 to analyze that one function by using the _analyze function_ `af` command. This is one of those cases where we can speed up our workflow because you're focusing on some specific part of an app.
+Notice that in this case, we're not starting with the `-A` flag, not running `aaa`. Instead, we just tell radare2 to analyze that one function by using the _analyze function_ `af` command. This is one of those cases where we can speed up our workflow because you're focusing on some specific part of an app.
 
 The workflow can be further improved by using [r2ghidra](https://github.com/radareorg/r2ghidra "r2ghidra"), a deep integration of Ghidra decompiler for radare2. r2ghidra generates decompiled C code, which can aid in quickly analyzing the binary.
 
@@ -69,7 +69,28 @@ We assume that you've successfully opened `lib/armeabi-v7a/libnative-lib.so` in 
 
 Not a lot of code there, but you should analyze it. The first thing you need to know is that the first argument passed to every JNI function is a JNI interface pointer. An interface pointer is a pointer to a pointer. This pointer points to a function table: an array of even more pointers, each of which points to a JNI interface function (is your head spinning yet?). The function table is initialized by the Java VM and allows the native function to interact with the Java environment.
 
-<img src="Images/Chapters/0x05c/JNI_interface.png" width="100%" />
+```mermaid
+flowchart LR
+    JNI["JNI interface pointer"]
+
+    STRUCT["Pointer<br/>──────────<br/>per-thread JNI<br/>data structure"]
+
+    subgraph JNI_FUNCTIONS["Array of pointers to JNI functions"]
+        direction TB
+        ARRAY["Pointer<br/>──────────<br/>Pointer<br/>──────────<br/>Pointer<br/>──────────<br/>⋯"]
+    end
+
+    F1(["an interface<br/>function"])
+    F2(["an interface<br/>function"])
+    F3(["an interface<br/>function"])
+
+    JNI --> STRUCT
+    STRUCT --> ARRAY
+
+    ARRAY --> F1
+    ARRAY --> F2
+    ARRAY --> F3
+```
 
 With that in mind, let's have a look at each line of assembly code.
 
@@ -111,8 +132,8 @@ When this function returns, R0 contains a pointer to the newly constructed UTF s
 
 ## Ghidra
 
-After opening the library in Ghidra we can see all the functions defined in the **Symbol Tree** panel under **Functions**. The native library for the current application is relatively very small. There are three user defined functions: `FUN_001004d0`, `FUN_0010051c`, and `Java_sg_vantagepoint_helloworldjni_MainActivity_stringFromJNI`. The other symbols are not user defined and are generated for proper functioning of the shared library. The instructions in the function `Java_sg_vantagepoint_helloworldjni_MainActivity_stringFromJNI` are already discussed in detail in previous sections. In this section we can look into the decompilation of the function.
+After opening the library in Ghidra we can see all the functions defined in the **Symbol Tree** panel under **Functions**. The native library for the current application is relatively very small. There are three user-defined functions: `FUN_001004d0`, `FUN_0010051c`, and `Java_sg_vantagepoint_helloworldjni_MainActivity_stringFromJNI`. The other symbols are not user-defined and are generated for the proper functioning of the shared library. The instructions in the function `Java_sg_vantagepoint_helloworldjni_MainActivity_stringFromJNI` are already discussed in detail in previous sections. In this section, we can look into the decompilation of the function.
 
-Inside the current function there is a call to another function, whose address is obtained by accessing an offset in the `JNIEnv` pointer (found as `plParm1`). This logic has been diagrammatically demonstrated above as well. The corresponding C code for the disassembled function is shown in the **Decompiler** window. This decompiled C code makes it much easier to understand the function call being made. Since this function is small and extremely simple, the decompilation output is very accurate, this can change drastically when dealing with complex functions.
+Inside the current function, there is a call to another function, whose address is obtained by accessing an offset in the `JNIEnv` pointer (found as `plParm1`). This logic has been diagrammatically demonstrated above as well. The corresponding C code for the disassembled function is shown in the **Decompiler** window. This decompiled C code makes it much easier to understand the function call being made. Since this function is small and extremely simple, the decompilation output is very accurate. This can change drastically when dealing with complex functions.
 
 <img src="Images/Chapters/0x05c/Ghidra_decompiled_function.png" width="100%" />

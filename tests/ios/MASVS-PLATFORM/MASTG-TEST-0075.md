@@ -8,6 +8,10 @@ title: Testing Custom URL Schemes
 masvs_v1_levels:
 - L1
 - L2
+profiles: [L1, L2]
+status: deprecated
+covered_by: [MASTG-TEST-0370, MASTG-TEST-0371]
+deprecation_note: "New version available in MASTG V2"
 ---
 
 ## Overview
@@ -30,7 +34,7 @@ If you have the original source code and want to view registered protocol handle
 
 <img src="Images/Chapters/0x06h/URL_scheme.png" width="100%" />
 
-Also in Xcode you can find this by searching for the `CFBundleURLTypes` key in the app’s `Info.plist` file (example from [iGoat-Swift](https://github.com/OWASP/iGoat-Swift "iGoat-Swift")):
+Also in Xcode you can find this by searching for the `CFBundleURLTypes` key in the app's `Info.plist` file (example from @MASTG-APP-0028):
 
 ```xml
 <key>CFBundleURLTypes</key>
@@ -46,7 +50,7 @@ Also in Xcode you can find this by searching for the `CFBundleURLTypes` key in t
 </array>
 ```
 
-In a compiled application (or IPA), registered protocol handlers are found in the file `Info.plist` in the app bundle's root folder. Open it and search for the `CFBundleURLSchemes` key, if present, it should contain an array of strings (example from [iGoat-Swift](https://github.com/OWASP/iGoat-Swift "iGoat-Swift")):
+In a compiled application (or IPA), registered protocol handlers are found in the file `Info.plist` in the app bundle's root folder. Open it and search for the `CFBundleURLSchemes` key, if present, it should contain an array of strings (example from @MASTG-APP-0028):
 
 ```xml
 grep -A 5 -nri urlsch Info.plist
@@ -142,7 +146,7 @@ We can observe some things here:
 
 The method [`openURL:options:completionHandler:`](https://developer.apple.com/documentation/uikit/uiapplication/1648685-openurl?language=objc "UIApplication openURL:options:completionHandler:") and the [deprecated `openURL:` method of `UIApplication`](https://developer.apple.com/documentation/uikit/uiapplication/1622961-openurl?language=objc "UIApplication openURL:") are responsible for opening URLs (i.e. to send requests / make queries to other apps) that may be local to the current app or it may be one that must be provided by a different app. If you have the original source code you can search directly for usages of those methods.
 
-Additionally, if you are interested into knowing if the app is querying specific services or apps, and if the app is well-known, you can also search for common URL schemes online and include them in your greps. For example, a [quick Google search reveals](https://ios.gadgethacks.com/news/always-updated-list-ios-app-url-scheme-names-0184033/ "Always-Updated List of iOS App URL Scheme Names"):
+Additionally, if you are interested into knowing if the app is querying specific services or apps, and if the app is well-known, you can also search for common URL schemes online and include them in your greps. For example, a [quick Google search reveals](https://web.archive.org/web/20200903221322/https://ios.gadgethacks.com/news/always-updated-list-ios-app-url-scheme-names-0184033/ "Always-Updated List of iOS App URL Scheme Names"):
 
 ```default
 Apple Music - music:// or musics:// or audio-player-event://
@@ -231,7 +235,7 @@ You can do that by first verifying that the app binary contains those strings by
 strings <yourapp> | grep "someURLscheme://"
 ```
 
-or even better, use radare2's `iz/izz` command or rafind2, both will find strings where the unix `strings` command won't. Example from iGoat-Swift:
+or even better, use radare2's `iz/izz` command or rafind2, both will find strings where the unix `strings` command won't. Example from @MASTG-APP-0028:
 
 ```bash
 $ r2 -qc izz~iGoat:// iGoat-Swift
@@ -246,7 +250,7 @@ Search for deprecated methods like:
 - [`openURL:`](https://developer.apple.com/documentation/uikit/uiapplication/1622961-openurl?language=objc "UIApplication openURL:")
 - [`application:openURL:sourceApplication:annotation:`](https://developer.apple.com/documentation/uikit/uiapplicationdelegate/1623073-application "UIApplicationDelegate application:openURL:sourceApplication:annotation:")
 
-For example, here we find those three:
+For example, using @MASTG-TOOL-0129 we find those three:
 
 ```bash
 $ rabin2 -zzq Telegram\ X.app/Telegram\ X | grep -i "openurl"
@@ -284,7 +288,7 @@ As already seen in "Triggering Universal Links", you may use the Notes app and l
 
 #### Using Frida
 
-If you simply want to open the URL scheme you can do it using Frida:
+If you simply want an app to open the URL scheme you can do it using Frida. Example using @MASTG-APP-0028:
 
 ```javascript
 $ frida -U iGoat-Swift
@@ -308,7 +312,8 @@ function openURL(url) {
 }
 ```
 
-> Note that the use of non-public APIs is not permitted on the App Store, that's why we don't even test these but we are allowed to use them for our dynamic analysis.
+!!! note
+    The use of non-public APIs is not permitted on the App Store. That's why we don't even test these, but we are allowed to use them for our dynamic analysis.
 
 ### Identifying and Hooking the URL Handler Method
 
@@ -318,7 +323,7 @@ If you can't look into the original source code you will have to find out yourse
 
 For this we will use the [ObjC method observer](https://codeshare.frida.re/@mrmacete/objc-method-observer/ "ObjC method observer") from Frida CodeShare, which is an extremely handy script that allows you to quickly observe any collection of methods or classes just by providing a simple pattern.
 
-In this case we are interested into all methods containing "openURL", therefore our pattern will be `*[* *openURL*]`:
+In this case we are interested into all methods from the @MASTG-APP-0028 app containing "openURL", therefore our pattern will be `*[* *openURL*]`:
 
 - The first asterisk will match all instance `-` and class `+` methods.
 - The second matches all Objective-C classes.
@@ -372,7 +377,7 @@ Now we know that:
 - We can also know from where it was called, as expected from `-[UIApplication _applicationOpenURLAction:payload:origin:]`.
 - The method returns `0x1` which means `YES` ([the delegate successfully handled the request](https://developer.apple.com/documentation/uikit/uiapplicationdelegate/1623112-application?language=objc#return-value "application:openURL:options: Return Value")).
 
-The call was successful and we see now that the [iGoat](../../../Document/0x08b-Reference-Apps.md#igoat) app was open:
+The call was successful and we see now that the @MASTG-APP-0028 app was open:
 
 <img src="Images/Chapters/0x06h/iGoat_opened_via_url_scheme.jpg" width="400px" />
 
@@ -380,7 +385,7 @@ Notice that we can also see that the caller (source application) was Safari if w
 
 #### Dynamically Opening the Link from the App Itself
 
-It is also interesting to see which other methods get called on the way. To change the result a little bit we will call the same URL scheme from the [iGoat](../../../Document/0x08b-Reference-Apps.md#igoat) app itself. We will use again ObjC method observer and the Frida REPL:
+It is also interesting to see which other methods get called on the way. To change the result a little bit we will call the same URL scheme from the @MASTG-APP-0028 app itself. We will use again ObjC method observer and the Frida REPL:
 
 ```javascript
 $ frida -U iGoat-Swift --codeshare mrmacete/objc-method-observer
@@ -606,9 +611,9 @@ The [FuzzDB](https://github.com/fuzzdb-project/fuzzdb "FuzzDB") project offers f
 
 #### Using Frida
 
-Doing this with Frida is pretty easy, as explained in this [blog post](https://grepharder.github.io/blog/0x03_learning_about_universal_links_and_fuzzing_url_schemes_on_ios_with_frida.html "Learning about Universal Links and Fuzzing URL Schemes on iOS with Frida") to see an example that fuzzes the [iGoat-Swift](../../../Document/0x08b-Reference-Apps.md#igoat-swift) app (working on iOS 11.1.2).
+Doing this with Frida is pretty easy, as explained in this [blog post](https://grepharder.github.io/blog/0x03_learning_about_universal_links_and_fuzzing_url_schemes_on_ios_with_frida.html "Learning about Universal Links and Fuzzing URL Schemes on iOS with Frida") to see an example that fuzzes the @MASTG-APP-0028 app (working on iOS 11.1.2).
 
-Before running the fuzzer we need the URL schemes as inputs. From the static analysis we know that the [iGoat-Swift](../../../Document/0x08b-Reference-Apps.md#igoat-swift) app supports the following URL scheme and parameters: `iGoat://?contactNumber={0}&message={0}`.
+Before running the fuzzer we need the URL schemes as inputs. From the static analysis we know that the iGoat-Swift app supports the following URL scheme and parameters: `iGoat://?contactNumber={0}&message={0}`.
 
 ```bash
 $ frida -U SpringBoard -l ios-url-scheme-fuzzing.js

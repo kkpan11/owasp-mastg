@@ -1,3 +1,7 @@
+---
+platform: generic
+---
+
 # Mobile Application Security Testing
 
 In the following sections we'll provide a brief overview of general security testing principles and key terminology. The concepts introduced are largely identical to those found in other types of penetration testing, so if you are an experienced tester you may be familiar with some of the content.
@@ -53,8 +57,6 @@ Automated analysis tools can be used to speed up the review process of Static Ap
 
 Although some static code analysis tools incorporate a lot of information about the rules and semantics required to analyze mobile apps, they may produce many false positives, particularly if they are not configured for the target environment. A security professional must therefore always review the results.
 
-The chapter ["Testing Tools"](0x08a-Testing-Tools.md) includes a list of static analysis tools, which can be found at the end of this book.
-
 ### Dynamic Analysis
 
 The focus of DAST is the testing and evaluation of apps via their real-time execution. The main objective of dynamic analysis is finding security vulnerabilities or weak spots in a program while it is running. Dynamic analysis is conducted both at the mobile platform layer and against the backend services and APIs, where the mobile app's request and response patterns can be analyzed.
@@ -82,7 +84,7 @@ Stored Cross-Site Scripting (XSS) can be an issue if the app includes WebViews, 
 
 ### Penetration Testing (a.k.a. Pentesting)
 
-The classic approach involves all-around security testing of the app's final or near-final build, e.g., the build that's available at the end of the development process. For testing at the end of the development process, we recommend the [Mobile App Security Verification Standard (MASVS)](https://github.com/OWASP/owasp-masvs "OWASP MASVS") and the associated checklist as baseline for testing. A typical security test is structured as follows:
+The classic approach involves all-around security testing of the app's final or near-final build, e.g., the build that's available at the end of the development process. For testing at the end of the development process, we recommend the [Mobile App Security Verification Standard (MASVS)](https://github.com/OWASP/masvs "OWASP MASVS") and the associated checklist as baseline for testing. A typical security test is structured as follows:
 
 - **Preparation** - defining the scope of security testing, including identifying applicable security controls, the organization's testing goals, and sensitive data. More generally, preparation includes all synchronization with the client as well as legally protecting the tester (who is often a third party). Remember, attacking a system without written authorization is illegal in many parts of the world!
 - **Intelligence Gathering** - analyzing the **environmental** and **architectural** context of the app to gain a general contextual understanding.
@@ -92,11 +94,11 @@ The classic approach involves all-around security testing of the app's final or 
 
 #### Preparation
 
-The security level at which the app will be tested must be decided before testing. The security requirements should be decided at the beginning of the project. Different organizations have different security needs and resources available for investing in test activities. Although the controls in MASVS Level 1 (L1) are applicable to all mobile apps, walking through the entire checklist of L1 and Level 2 (L2) MASVS controls with technical and business stakeholders is a good way to decide on a level of test coverage.
+The security level at which the app will be tested must be decided before testing. The security requirements should be decided at the beginning of the project. Different organizations have different security needs and resources available for investing in test activities. Although the tests in the [MAS-L1](https://mas.owasp.org/Profiles/MAS-L1/) profile are applicable to all mobile apps, walking through the entire MAS-L1 and [MAS-L2](https://mas.owasp.org/Profiles/MAS-L2/) tests with technical and business stakeholders is a good way to decide on a level of test coverage.
 
-Organizations may have different regulatory and legal obligations in certain territories. Even if an app doesn't handle sensitive data, some L2 requirements may be relevant (because of industry regulations or local laws). For example, two-factor authentication (2FA) may be obligatory for a financial app and enforced by a country's central bank and/or financial regulatory authorities.
+Organizations may have different regulatory and legal obligations in certain territories. Even if an app doesn't handle sensitive data, some [MAS-L2](https://mas.owasp.org/Profiles/MAS-L2/) tests may be relevant (because of industry regulations or local laws). For example, two-factor authentication (2FA) may be obligatory for a financial app and enforced by a country's central bank and/or financial regulatory authorities.
 
-Security goals/controls defined earlier in the development process may also be reviewed during the discussion with stakeholders. Some controls may conform to MASVS controls, but others may be specific to the organization or app.
+Security goals/controls defined earlier in the development process may also be reviewed during the discussion with stakeholders. Some controls may conform to [MAS profiles](https://mas.owasp.org/Profiles/), but others may be specific to the organization or app.
 
 All involved parties must agree on the decisions and the scope in the checklist because these will define the baseline for all security testing.
 
@@ -133,7 +135,21 @@ When no data classification policy is available, use the following list of infor
 - any data whose protection is a legal obligation
 - any technical data generated by the app (or its related systems) and used to protect other data or the system itself (e.g., encryption keys)
 
- A definition of "sensitive data" must be decided before testing begins because detecting sensitive data leakage without a definition may be impossible.
+A definition of "sensitive data" must be decided before testing begins because detecting sensitive data leakage without a definition may be impossible.
+
+##### Identifying Security-Relevant Contexts in Code
+
+When developing a mobile application, it's crucial to accurately identify and handle security-relevant contexts within the codebase. These contexts typically involve operations such as authentication, encryption, and authorization, which are often the target of security attacks. Incorrect implementation of cryptographic functions in these areas can lead to significant security vulnerabilities.
+
+Properly distinguishing security-relevant contexts helps in minimizing false positives during security testing. False positives can divert attention from real issues and waste valuable resources. Here are some common scenarios:
+
+- **Random Number Generation**: Using predictable random number generators can be a serious security flaw in contexts like authentication or encryption key generation. However, not all uses of random numbers are security-sensitive. For instance, using a less robust random number generator for non-security purposes like shuffling a list of items in a game is generally acceptable.
+
+- **Hashing**: Hashing is often used in security for storing passwords or ensuring data integrity. However, hashing a non-sensitive value, like a device's screen resolution for analytics, isn't a security concern.
+
+- **Encryption vs Encoding**: A common misunderstanding is conflating encoding (like Base64) with encryption. Base64 encoding is not a secure method for protecting sensitive data as it's easily reversible. It's crucial to recognize when data requires actual encryption (for confidentiality) versus when it's being encoded for compatibility or formatting reasons (like encoding binary data into a text format for transmission). Misinterpreting encoding as a security measure can lead to overlooking actual encryption needs for sensitive data.
+
+- **API Token Storage**: Storing API tokens or keys in plain text within the app's code or in insecure locations (like SharedPreferences on Android or UserDefaults on iOS) is a common security mistake. However, if the token is for a non-sensitive, read-only public API, this might not be a security risk. Contrast this with storing a token for a sensitive or write-access API, where improper storage would be a significant security concern.
 
 #### Intelligence Gathering
 
@@ -220,7 +236,7 @@ SDLCs always consist of the same steps (the overall process is sequential in the
 
 - Perform a **risk assessment** for the app and its components to identify their risk profiles. These risk profiles typically depend on the organization's risk appetite and applicable regulatory requirements. The risk assessment is also based on factors, including whether the app is accessible via the Internet and the kind of data the app processes and stores. All kinds of risks must be taken into account: financial, marketing, industrial, etc. Data classification policies specify which data is sensitive and how it must be secured.
 - **Security Requirements** are determined at the beginning of a project or development cycle, when functional requirements are being gathered. **Abuse Cases** are added as use cases are created. Teams (including development teams) may be given security training (such as Secure Coding) if they need it.
-You can use the [OWASP MASVS](https://mas.owasp.org/MASVS/ "OWASP MASVS") to determine the security requirements of mobile apps on the basis of the risk assessment phase. Iteratively reviewing requirements when features and data classes are added is common, especially with Agile projects.
+You can use the [OWASP MASVS](https://mas.owasp.org/MASVS/ "OWASP MASVS") and [OWASP MASWE](https://mas.owasp.org/MASWE/ "OWASP MASWE") to determine the security requirements of mobile apps on the basis of the risk assessment phase. Iteratively reviewing requirements when features and data classes are added is common, especially with Agile projects.
 - **Threat Modeling**, which is basically the identification, enumeration, prioritization, and initial handling of threats, is a foundational artifact that must be performed as architecture development and design progress. **Security Architecture**, a Threat Model factor, can be refined (for both software and hardware aspects) after the Threat Modeling phase. **Secure Coding rules** are established and the list of **Security tools** that will be used is created. The strategy for **Security testing** is clarified.
 - All security requirements and design considerations should be stored in the Application Life Cycle Management (ALM) system (also known as the issue tracker) that the development/ops team uses to ensure tight integration of security requirements into the development workflow. The security requirements should contain relevant source code snippets so that developers can quickly reference the snippets. Creating a dedicated repository that's under version control and contains only these code snippets is a secure coding strategy that's more beneficial than the traditional approach (storing the guidelines in word documents or PDFs).
 - **Securely develop the software**. To increase code security, you must complete activities such as **Security Code Reviews**, **Static Application Security Testing**, and **Security Unit Testing**. Although quality analogues of these security activities exist, the same logic must be applied to security, e.g., reviewing, analyzing, and testing code for security defects (for example, missing input validation, failing to free all resources, etc.).
@@ -275,7 +291,7 @@ Development and operations teams originally worked in silos, when pushing develo
 
 People may assume that the term "DevOps" represents collaboration between development and operations teams only, however, as DevOps thought leader Gene Kim puts it: "At first blush, it seems as though the problems are just between Devs and Ops, but test is in there, and you have information security objectives, and the need to protect systems and data. These are top-level concerns of management, and they have become part of the DevOps picture."
 
-In other words, DevOps collaboration includes quality teams, security teams, and many other teams related to the project. When you hear "DevOps" today, you should probably be thinking of something like [DevOpsQATestInfoSec](https://techbeacon.com/evolution-devops-new-thinking-gene-kim "The evolution of DevOps: Gene Kim on getting to continuous delivery"). Indeed, DevOps values pertain to increasing not only speed but also quality, security, reliability, stability, and resilience.
+In other words, DevOps collaboration includes quality teams, security teams, and many other teams related to the project. When you hear "DevOps" today, you should probably be thinking of something like [DevOpsQATestInfoSec](https://web.archive.org/web/20180918115528/https://techbeacon.com/evolution-devops-new-thinking-gene-kim "The evolution of DevOps: Gene Kim on getting to continuous delivery"). Indeed, DevOps values pertain to increasing not only speed but also quality, security, reliability, stability, and resilience.
 
 Security is just as critical to business success as the overall quality, performance, and usability of an app. As development cycles are shortened and delivery frequencies increased, making sure that quality and security are built in from the very beginning becomes essential. **DevSecOps** is all about adding security to DevOps processes. Most defects are identified during production. DevOps specifies best practices for identifying as many defects as possible early in the life cycle and for minimizing the number of defects in the released app.
 
@@ -310,7 +326,7 @@ Infrastructure as Code also facilitates the construction of the environments req
 
 Infrastructure as Code is commonly used for projects that have Cloud-based resources because many vendors provide APIs that can be used for provisioning items (such as virtual machines, storage spaces, etc.) and working on configurations (e.g., modifying memory sizes or the number of CPUs used by virtual machines). These APIs provide alternatives to administrators' performing these activities from monitoring consoles.
 
-The main tools in this domain are [Puppet](https://puppet.com/ "Puppet"), [Terraform](https://www.terraform.io/ "Terraform"), [Packer](https://www.packer.io/ "Packer"), [Chef](https://www.chef.io/chef/ "Chef") and [Ansible](https://www.ansible.com/ "Ansible").
+The main tools in this domain are [Puppet](https://puppet.com/ "Puppet"), [Terraform](https://developer.hashicorp.com/terraform "Terraform"), [Packer](https://developer.hashicorp.com/packer "Packer"), [Chef](https://www.chef.io/chef/ "Chef") and [Ansible](https://www.ansible.com/ "Ansible").
 
 ##### Deployment
 

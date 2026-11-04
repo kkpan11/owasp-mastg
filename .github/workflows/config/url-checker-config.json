@@ -1,19 +1,13 @@
 {
     "ignorePatterns": [
         {
-            "pattern": "https://github.com/Your_Github_Handle/owasp-mstg"
-        },
-        {
             "pattern": "changelog"
         },
         {
-            "pattern": "https://github.com/commjoen/contributors-mstg"
+            "pattern": "^http://127.0.0.1"
         },
         {
-            "pattern": "http://127.0.0.1:8000"
-        },
-        {
-            "pattern": "https://haveibeenpwned.com"
+            "pattern": "^http://localhost"
         },
         {
             "pattern": "https://www.hackingwithswift.com"
@@ -46,6 +40,9 @@
             "pattern": "^https://support.virustotal.com"
         },
         {
+            "pattern": "^https://research.kudelskisecurity.com"
+        },
+        {
             "pattern": "^https://www.europeanpaymentscouncil.eu"
         },
         {
@@ -73,6 +70,15 @@
             "pattern": "^https://secrary.com/"
         },
         {
+            "pattern": "^https://www.reddit.com/r/"
+        },
+        {
+            "pattern": "^https://www.netspi.com/blog/technical-blog/"
+        },
+        {
+            "pattern": "^https://web.archive.org"
+        },
+        {
             "pattern": "^MASTG/"
         },
         {
@@ -80,6 +86,9 @@
         },
         {
             "pattern": "^https://linkedin.com/in/"
+        },
+        {
+            "pattern": "^https://chromium.googlesource.com/"
         },
         {
             "pattern": "^https://github.com/sushi2k/MSTG-MASVS-Internal"
@@ -91,9 +100,98 @@
             "pattern": "^/MASTG/"
         },
         {
-            "pattern": "^/checklists/"
+            "pattern": "^/MASWE/"
+        },
+        {
+            "pattern": "^https://stackoverflow.com/"
+        },
+        {
+            "pattern": "^https://academy.realm.io/posts/russ-bishop-unsafe-swift/"
+        },
+        {
+            "pattern": "^https://cocoapods.org"
+        },
+        {
+            "pattern": "^https://www.hhs.gov/hipaa"
+        },
+        {
+            "pattern": "^https://www.cvedetails.com/cve/CVE"
+        },
+        {
+            "pattern": "https://tlsexpired.no"
+        },
+        {
+            "pattern": "https://mitm-software.badssl.com/"
+        },
+        {
+            "pattern": "^https://www.npmjs.com/package/"
+        },
+        {
+            "pattern": "https://apkmirror.com"
+        },
+        {
+            "pattern": "^https://codeshare.frida.re/"
+        },
+        {
+            "pattern": "^https://developer.hashicorp.com/"
+        },
+        {
+            "pattern": "^https://framework7.io/"
+        },
+        {
+            "pattern": "^https://sourceforge.net/projects/machoview/"
+        },
+        {
+            "pattern": "^https://academy.semgrep.dev/courses/secure-guardrails"
+        },
+        {
+            "pattern": "^https://developer.apple.com/forums/thread/79662"
+        },
+        {
+            "pattern": "^https://code.tutsplus.com/tutorials/android-best-practices-strictmode--mobile-7581"
+        },
+        {
+            "pattern": "^https://www.contributor-covenant.org/version/1/4/code-of-conduct.html"
+        },
+        {
+            "pattern": "^https://theapplewiki.com/"
+        },
+        {
+            "pattern": "^https://www.theapplewiki.com/"
+        },
+        {
+            "pattern": "^https://asciinema.org/"
+        },
+        {
+            "pattern": "^https://apklab.surendrajat.xyz/"
+        },
+        {
+            "pattern": "^https://www.cdc.gov/"
+        },
+        {
+            "pattern": "^http://egovstandards.gov.in/"
+        },
+        {
+            "pattern": "^https://ieeexplore.ieee.org/"
+        },
+        {
+            "pattern": "^https://developer.arm.com/documentation/"
+        },
+        {
+            "pattern": "^https://www.yumpu.com/"
+        },
+        {
+            "pattern": "^https://pentestcorner.com"
+        },
+        {
+            "pattern": "^https://bugs.openjdk.org"
         }
-        
+    ],
+    "replacementPatterns": [
+        {
+            "pattern": "^Images/",
+            "replacement": "{{BASEURL}}/Document/Images/"
+        }
     ],
     "httpHeaders": [
         {
@@ -102,7 +200,7 @@
                 "http://"
             ],
             "headers": {
-                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:64.0) Gecko/20100101 Firefox/64.0"
+                "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36"
             }
         }
     ],

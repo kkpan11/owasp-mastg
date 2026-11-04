@@ -7,6 +7,10 @@ platform: ios
 title: Testing Backups for Sensitive Data
 masvs_v1_levels:
 - L2
+status: deprecated
+covered_by: [MASTG-TEST-0215, MASTG-TEST-0298]
+profiles: [L1, L2]
+deprecation_note: New version available in MASTG V2
 ---
 
 ## Overview
@@ -19,7 +23,7 @@ Therefore, avoid storing sensitive data in plaintext within any of the files or 
 
 Although all the files in `Documents/` and `Library/Application Support/` are always backed up by default, you can [exclude files from the backup](https://developer.apple.com/library/content/documentation/FileManagement/Conceptual/FileSystemProgrammingGuide/FileSystemOverview/FileSystemOverview.html#//apple_ref/doc/uid/TP40010672-CH2-SW28 "Where You Should Put Your App\'s Files") by calling `NSURL setResourceValue:forKey:error:` with the `NSURLIsExcludedFromBackupKey` key.
 
-You can use the [NSURLIsExcludedFromBackupKey](https://developer.apple.com/reference/foundation/nsurl#//apple_ref/c/data/NSURLIsExcludedFromBackupKey "NSURLIsExcludedFromBackupKey") and [CFURLIsExcludedFromBackupKey](https://developer.apple.com/reference/corefoundation/cfurl-rd7#//apple_ref/c/data/kCFURLIsExcludedFromBackupKey "kCFURLIsExcludedFromBackupKey") file system properties to exclude files and directories from backups. An app that needs to exclude many files can do so by creating its own subdirectory and marking that directory excluded. Apps should create their own directories for exclusion instead of excluding system-defined directories.
+You can use the [`NSURLIsExcludedFromBackupKey`](https://developer.apple.com/documentation/foundation/nsurlisexcludedfrombackupkey "NSURLIsExcludedFromBackupKey") and [`CFURLIsExcludedFromBackupKey`](https://developer.apple.com/documentation/corefoundation/kcfurlisexcludedfrombackupkey) file system properties to exclude files and directories from backups. An app that needs to exclude many files can do so by creating its own subdirectory and marking that directory excluded. Apps should create their own directories for exclusion instead of excluding system-defined directories.
 
 Both file system properties are preferable to the deprecated approach of directly setting an extended attribute. All apps running on iOS version 5.1 and later should use these properties to exclude data from backups.
 
@@ -87,7 +91,7 @@ ls: MobileSync: Operation not permitted
 
 This is not a permission issue of the backup folder, but a new feature in macOS Mojave. You can solve this problem by granting full disk access to your terminal application by following the explanation on [OSXDaily](http://osxdaily.com/2018/10/09/fix-operation-not-permitted-terminal-error-macos/ "Fix Terminal -Operation not permitted- Error in MacOS Mojave").
 
-Before you can access the directory you need to select the folder with the UDID of your device. Check the section "Getting the UDID of an iOS device" in the "iOS Basic Security Testing" chapter on how to retrieve the UDID.
+Before you can access the directory you need to select the folder with the UDID of your device. Check the section ["Obtaining the UDID of an iOS device"](../../../Document/0x06b-iOS-Security-Testing.md#obtaining-the-udid-of-an-ios-device) on how to retrieve it.
 
 Once you know the UDID you can navigate into this directory and you will find the full backup of the whole device, which does include pictures, app data and whatever might have been stored on the device.
 
@@ -130,7 +134,7 @@ To identify if a backup is encrypted, you can check the key named "IsEncrypted" 
 
 In case you need to work with an encrypted backup, there are some Python scripts in [DinoSec's GitHub repo](https://github.com/dinosec/iphone-dataprotection/tree/master/python_scripts "iphone-dataprotection"), such as backup_tool.py and backup_passwd.py, that will serve as a good starting point. However, note that they might not work with the latest iTunes/Finder versions and might need to be tweaked.
 
-You can also use the tool [iOSbackup](../../../Document/0x08a-Testing-Tools.md#iosbackup) to easily read and extract files from a password-encrypted iOS backup.
+You can also use the tool @MASTG-TOOL-0053 to easily read and extract files from a password-encrypted iOS backup.
 
 ### Proof of Concept: Removing UI Lock with Tampered Backup
 

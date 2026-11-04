@@ -8,6 +8,10 @@ title: Testing Universal Links
 masvs_v1_levels:
 - L1
 - L2
+profiles: [L1, L2]
+status: deprecated
+covered_by: [MASTG-TEST-0370, MASTG-TEST-0371, MASTG-TEST-0395]
+deprecation_note: New version available in MASTG V2
 ---
 
 ## Overview
@@ -40,7 +44,7 @@ Here's an example from Telegram's `.entitlements` file:
 
 More detailed information can be found in the [archived Apple Developer Documentation](https://developer.apple.com/library/archive/documentation/General/Conceptual/AppSearch/UniversalLinks.html#//apple_ref/doc/uid/TP40016308-CH12-SW2 "Preparing Your App to Handle Universal Links").
 
-If you don't have the original source code you can still search for them, as explained in "Entitlements Embedded in the Compiled App Binary".
+If you don't have the original source code you can extract them from the MachO file as explained in @MASTG-TECH-0111.
 
 ### Retrieving the Apple App Site Association File
 
@@ -80,7 +84,7 @@ Alternatively, you can use the [Apple App Site Association (AASA) Validator](htt
 }
 ```
 
-The "details" key inside "applinks" contains a JSON representation of an array that might contain one or more apps. The "appID" should match the "application-identifier" key from the app’s entitlements. Next, using the "paths" key, the developers can specify certain paths to be handled on a per app basis. Some apps, like Telegram use a standalone * (`"paths": ["*"]`) in order to allow all possible paths. Only if specific areas of the website should **not** be handled by some app, the developer can restrict access by excluding them by prepending a `"NOT "` (note the whitespace after the T) to the corresponding path. Also remember that the system will look for matches by following the order of the dictionaries in the array (first match wins).
+The "details" key inside "applinks" contains a JSON representation of an array that might contain one or more apps. The "appID" should match the "application-identifier" key from the app's entitlements. Next, using the "paths" key, the developers can specify certain paths to be handled on a per app basis. Some apps, like Telegram use a standalone * (`"paths": ["*"]`) in order to allow all possible paths. Only if specific areas of the website should **not** be handled by some app, the developer can restrict access by excluding them by prepending a `"NOT "` (note the whitespace after the T) to the corresponding path. Also remember that the system will look for matches by following the order of the dictionaries in the array (first match wins).
 
 This path exclusion mechanism is not to be seen as a security feature but rather as a filter that developer might use to specify which apps open which links. By default, iOS does not open any unverified links.
 
@@ -96,14 +100,14 @@ In order to receive links and handle them appropriately, the app delegate has to
 
 Please note that if the app uses [`openURL:options:completionHandler:`](https://developer.apple.com/documentation/uikit/uiapplication/1648685-openurl?language=objc "UIApplication openURL:options:completionHandler:") to open a universal link to the app's website, the link won't open in the app. As the call originates from the app, it won't be handled as a universal link.
 
-> From Apple Docs: When iOS launches your app after a user taps a universal link, you receive an `NSUserActivity` object with an `activityType` value of `NSUserActivityTypeBrowsingWeb`. The activity object’s `webpageURL` property contains the URL that the user is accessing. The webpage URL property always contains an HTTP or HTTPS URL, and you can use `NSURLComponents` APIs to manipulate the components of the URL. [...] To protect users’ privacy and security, you should not use HTTP when you need to transport data; instead, use a secure transport protocol such as HTTPS.
+> From Apple Docs: When iOS launches your app after a user taps a universal link, you receive an `NSUserActivity` object with an `activityType` value of `NSUserActivityTypeBrowsingWeb`. The activity object's `webpageURL` property contains the URL that the user is accessing. The webpage URL property always contains an HTTP or HTTPS URL, and you can use `NSURLComponents` APIs to manipulate the components of the URL. [...] To protect users' privacy and security, you should not use HTTP when you need to transport data; instead, use a secure transport protocol such as HTTPS.
 
 From the note above we can highlight that:
 
 - The mentioned `NSUserActivity` object comes from the `continueUserActivity` parameter, as seen in the method above.
 - The scheme of the `webpageURL` must be HTTP or HTTPS (any other scheme should throw an exception). The [`scheme` instance property](https://developer.apple.com/documentation/foundation/urlcomponents/1779624-scheme "URLComponents scheme") of `URLComponents` / `NSURLComponents` can be used to verify this.
 
-If you don't have the original source code you can use radare2 or rabin2 to search the binary strings for the link receiver method:
+If you don't have the original source code you can use @MASTG-TOOL-0073 or @MASTG-TOOL-0129 to search the binary strings for the link receiver method:
 
 ```bash
 $ rabin2 -zq Telegram\ X.app/Telegram\ X | grep restorationHan
@@ -115,9 +119,9 @@ $ rabin2 -zq Telegram\ X.app/Telegram\ X | grep restorationHan
 
 You should check how the received data is validated. Apple [explicitly warns about this](https://developer.apple.com/documentation/uikit/core_app/allowing_apps_and_websites_to_link_to_your_content/handling_universal_links "Handling Universal Links"):
 
-> Universal links offer a potential attack vector into your app, so make sure to validate all URL parameters and discard any malformed URLs. In addition, limit the available actions to those that do not risk the user’s data. For example, do not allow universal links to directly delete content or access sensitive information about the user. When testing your URL-handling code, make sure your test cases include improperly formatted URLs.
+> Universal links offer a potential attack vector into your app, so make sure to validate all URL parameters and discard any malformed URLs. In addition, limit the available actions to those that do not risk the user's data. For example, do not allow universal links to directly delete content or access sensitive information about the user. When testing your URL-handling code, make sure your test cases include improperly formatted URLs.
 
-As stated in the [Apple Developer Documentation](https://developer.apple.com/documentation/uikit/core_app/allowing_apps_and_websites_to_link_to_your_content/handling_universal_links "Handling Universal Links"), when iOS opens an app as the result of a universal link, the app receives an `NSUserActivity` object with an `activityType` value of `NSUserActivityTypeBrowsingWeb`. The activity object’s `webpageURL` property contains the HTTP or HTTPS URL that the user accesses. The following example in Swift verifies exactly this before opening the URL:
+As stated in the [Apple Developer Documentation](https://developer.apple.com/documentation/uikit/core_app/allowing_apps_and_websites_to_link_to_your_content/handling_universal_links "Handling Universal Links"), when iOS opens an app as the result of a universal link, the app receives an `NSUserActivity` object with an `activityType` value of `NSUserActivityTypeBrowsingWeb`. The activity object's `webpageURL` property contains the HTTP or HTTPS URL that the user accesses. The following example in Swift verifies exactly this before opening the URL:
 
 ```default
 func application(_ application: UIApplication, continue userActivity: NSUserActivity,
@@ -161,7 +165,7 @@ func application(_ application: UIApplication,
 }
 ```
 
-Finally, as stated above, be sure to verify that the actions triggered by the URL do not expose sensitive information or risk the user’s data on any way.
+Finally, as stated above, be sure to verify that the actions triggered by the URL do not expose sensitive information or risk the user's data on any way.
 
 ### Checking if the App is Calling Other App's Universal Links
 
@@ -169,7 +173,8 @@ An app might be calling other apps via universal links in order to simply trigge
 
 If you have the original source code, you can search it for the `openURL:options: completionHandler:` method and check the data being handled.
 
-> Note that the `openURL:options:completionHandler:` method is not only used to open universal links but also to call custom URL schemes.
+!!! note
+    The `openURL:options:completionHandler:` method is not only used to open universal links but also to call custom URL schemes.
 
 This is an example from the Telegram app:
 
@@ -203,7 +208,7 @@ $ rabin2 -zq Telegram\ X.app/Telegram\ X | grep openURL
 0x1000df772 35 34 openURL:options:completionHandler:
 ```
 
-As expected, `openURL:options:completionHandler:` is among the ones found (remember that it might be also present because the app opens custom URL schemes). Next, to ensure that no sensitive information is being leaked you'll have to perform dynamic analysis and inspect the data being transmitted. Please refer to "[Identifying and Hooking the URL Handler Method](../MASVS-PLATFORM/MASTG-TEST-0075.md#identifying-and-hooking-the-url-handler-method "Identifying and Hooking the URL Handler Method")" for some examples on hooking and tracing this method.
+As expected, `openURL:options:completionHandler:` is among the ones found (remember that it might be also present because the app opens custom URL schemes). Next, to ensure that no sensitive information is being leaked you'll have to perform dynamic analysis and inspect the data being transmitted. Please refer to @MASTG-TEST-0075 for some examples on hooking and tracing this method.
 
 ## Dynamic Analysis
 
@@ -232,7 +237,7 @@ Unlike custom URL schemes, unfortunately you cannot test universal links from Sa
 
 > To do it from Safari you will have to find an existing link on a website that once clicked, it will be recognized as a Universal Link. This can be a bit time consuming.
 
-Alternatively you can also use Frida for this, see the section "[Performing URL Requests](../MASVS-PLATFORM/MASTG-TEST-0075.md#performing-url-requests)" for more details.
+Alternatively you can also use Frida for this, see @MASTG-TEST-0075 for more details.
 
 ### Identifying Valid Universal Links
 
@@ -257,7 +262,8 @@ If we long press on the second (`http://www.apple.com/today`) it shows options t
 
 <img src="Images/Chapters/0x06h/allowed_universal_link.png" width="400px" />
 
-> Note that there is a difference between a click and a long press. Once we long press a link and select an option, e.g. "Open in Safari", this will become the default option for all future clicks until we long press again and select another option.
+!!! note
+    There is a difference between a click and a long press. Once we long press a link and select an option, e.g. "Open in Safari", this will become the default option for all future clicks until we long press again and select another option.
 
 If we repeat the process on the method `application:continueUserActivity: restorationHandler:` by either hooking or tracing, we will see how it gets called as soon as we open the allowed universal link. For this you can use for example `frida-trace`:
 
@@ -473,7 +479,7 @@ You can now keep going and try to trace and verify how the data is being validat
 
 In some cases, you might find data in `userInfo` of the `NSUserActivity` object. In the previous case there was no data being transferred but it might be the case for other scenarios. To see this, be sure to hook the `userInfo` property or access it directly from the `continueUserActivity` object in your hook (e.g. by adding a line like this `log("userInfo:" + ObjC.Object(args[3]).userInfo().toString());`).
 
-##### Final Notes about Universal Links and Handoff
+### Final Notes about Universal Links and Handoff
 
 Universal links and Apple's [Handoff feature](https://developer.apple.com/library/archive/documentation/UserExperience/Conceptual/Handoff/HandoffFundamentals/HandoffFundamentals.html#//apple_ref/doc/uid/TP40014338 "Handoff Fundamentals: About Handoff") are related:
 

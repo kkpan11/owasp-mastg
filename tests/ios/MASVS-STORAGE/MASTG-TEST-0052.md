@@ -9,6 +9,10 @@ title: Testing Local Data Storage
 masvs_v1_levels:
 - L1
 - L2
+profiles: [L1, L2]
+status: deprecated
+covered_by: [MASTG-TEST-0299, MASTG-TEST-0300, MASTG-TEST-0301, MASTG-TEST-0302, MASTG-TEST-0303]
+deprecation_note: New version available in MASTG V2
 ---
 
 ## Overview
@@ -20,7 +24,8 @@ This test case focuses on identifying potentially sensitive data stored by an ap
 - Check all application generated and modified files and ensure that the storage method is sufficiently secure.
     - This includes `NSUserDefaults`, databases, KeyChain, Internal Storage, External Storage, etc.
 
-**NOTE:** For MASVS L1 compliance, it is sufficient to store data unencrypted in the application's internal storage directory (sandbox). For L2 compliance, additional encryption is required using cryptographic keys securely managed in the iOS KeyChain. This includes using envelope encryption (DEK+KEK) or equivalent methods.
+!!! note
+    For MASVS L1 compliance, it is sufficient to store data unencrypted in the application's internal storage directory (sandbox). For L2 compliance, additional encryption is required using cryptographic keys securely managed in the iOS KeyChain. This includes using envelope encryption (DEK+KEK) or equivalent methods.
 
 ## Static Analysis
 
@@ -59,11 +64,12 @@ You can analyze the app's data directory on a non-jailbroken iOS device by using
 4. Navigate to the output directory and locate `$APP_NAME.imazing`. Rename it to `$APP_NAME.zip`.
 5. Unpack the ZIP file. You can then analyze the application data.
 
-> Note that tools like iMazing don't copy data directly from the device. They try to extract data from the backups they create. Therefore, getting all the app data that's stored on the iOS device is impossible: not all folders are included in backups. Use a jailbroken device or repackage the app with Frida and use a tool like objection to access all the data and files.
+!!! note
+    Tools like iMazing don't copy data directly from the device. They try to extract data from the backups they create. Therefore, getting all the app data that's stored on the iOS device is impossible: not all folders are included in backups. Use a jailbroken device or repackage the app with Frida and use a tool like objection to access all the data and files.
 
-If you added the Frida library to the app and repackaged it as described in "Dynamic Analysis on Non-Jailbroken Devices" (from the "Tampering and Reverse Engineering on iOS" chapter), you can use [objection](https://github.com/sensepost/objection "objection") to transfer files directly from the app's data directory or [read files in objection](https://github.com/sensepost/objection/wiki/Using-objection#getting-started-ios-edition "Getting started iOS edition") as explained in the chapter "Basic Security Testing on iOS", section "[Host-Device Data Transfer](../../../Document/0x06b-iOS-Security-Testing.md#host-device-data-transfer "Host-Device Data Transfer")".
+If you added the Frida library to the app and repackaged it as described in "Dynamic Analysis on Non-Jailbroken Devices" (from the "Tampering and Reverse Engineering on iOS" chapter), you can use @MASTG-TOOL-0038 to transfer files directly from the app's data directory or [read files in objection](https://github.com/sensepost/objection/wiki/Using-objection#getting-started-ios-edition "Getting started iOS edition") as explained in @MASTG-TECH-0053.
 
-The Keychain contents can be dumped during dynamic analysis. On a jailbroken device, you can use [Keychain dumper](https://github.com/ptoomey3/Keychain-Dumper/ "Keychain Dumper") as described in the chapter "Basic Security Testing on iOS".
+The Keychain contents can be dumped during dynamic analysis using different tools, see @MASTG-TECH-0061.
 
 The path to the Keychain file is
 
@@ -97,7 +103,7 @@ Then you can monitor and verify the changes in the filesystem of the app and inv
 
 ### Dynamic Analysis with Objection
 
-You can use the [objection](https://github.com/sensepost/objection "objection") runtime mobile exploration toolkit to find vulnerabilities caused by the application's data storage mechanism. Objection can be used without a Jailbroken device, but it will require [patching the iOS Application](https://github.com/sensepost/objection/wiki/Patching-iOS-Applications "Objection").
+You can use the @MASTG-TOOL-0038 runtime mobile exploration toolkit to find vulnerabilities caused by the application's data storage mechanism. Objection can be used without a Jailbroken device, but it will require [patching the iOS Application](https://github.com/sensepost/objection/wiki/Patching-iOS-Applications "Objection").
 
 #### Reading the Keychain
 
@@ -111,7 +117,7 @@ Dumping the iOS keychain...
 Created                    Accessible                      ACL    Type      Account                    Service                                                        Data
 -------------------------  ------------------------------  -----  --------  -------------------------  -------------------------------------------------------------  ------------------------------------
 2020-02-11 13:26:52 +0000  WhenUnlocked                    None   Password  keychainValue              com.highaltitudehacks.DVIAswiftv2.develop                      mysecretpass123
-```  
+```
 
 #### Searching for Binary Cookies
 
@@ -211,7 +217,7 @@ Time: 0.013s
 
 #### Searching for Cache Databases
 
-By default NSURLSession stores data, such as HTTP requests and responses in the Cache.db database. This database can contain sensitive data, if tokens, usernames or any other sensitive information has been cached. To find the cached information open the data directory of the app (`/var/mobile/Containers/Data/Application/<UUID>`) and go to  `/Library/Caches/<Bundle Identifier>`. The WebKit cache is also being stored in the Cache.db file. Objection can open and interact with the database with the command `sqlite connect Cache.db`, as it is a normal SQLite database.
+By default NSURLSession stores data, such as HTTP requests and responses in the Cache.db database. This database can contain sensitive data, if tokens, usernames or any other sensitive information has been cached. To find the cached information open the data directory of the app (`/var/mobile/Containers/Data/Application/<UUID>`) and go to `/Library/Caches/<Bundle Identifier>`. The WebKit cache is also being stored in the Cache.db file. Objection can open and interact with the database with the command `sqlite connect Cache.db`, as it is a normal SQLite database.
 
 It is recommended to disable Caching this data, as it may contain sensitive information in the request or response. The following list below shows different ways of achieving this:
 
